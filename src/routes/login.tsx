@@ -1,8 +1,22 @@
 import { LoginForm } from "@/modules/LoginForm";
-import { PATH } from "@/router/paths";
-import { Link } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
-export function LoginPage() {
+export const Route = createFileRoute("/login")({
+  component: LoginPage,
+  head: () => ({
+    meta: [
+      {
+        name: "description",
+        content: "Вход в систему Yomi",
+      },
+      {
+        title: "Вход - Yomi",
+      },
+    ],
+  }),
+});
+
+function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <div className="w-full max-w-md space-y-8">
@@ -12,7 +26,7 @@ export function LoginPage() {
           <p className="text-sm text-muted-foreground">
             Нет аккаунта?{" "}
             <Link
-              to={PATH.REGISTER}
+              to="/register"
               className="font-medium text-primary hover:underline"
             >
               Зарегистрироваться

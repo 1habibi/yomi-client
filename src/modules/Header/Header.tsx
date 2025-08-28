@@ -1,5 +1,4 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { PATH } from "../../router/paths";
 
 export function Header() {
   const location = useLocation();
@@ -22,9 +21,9 @@ export function Header() {
           {/* Навигация */}
           <nav className="hidden md:flex space-x-8">
             <Link
-              to={PATH.HOME}
+              to="/"
               className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                isActive(PATH.HOME)
+                isActive("/")
                   ? "text-zinc-950 bg-zinc-100"
                   : "text-zinc-700 hover:bg-zinc-100"
               }`}
@@ -33,16 +32,29 @@ export function Header() {
             </Link>
           </nav>
 
+          <nav className="hidden md:flex space-x-8">
+            <Link
+              to="/about"
+              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                isActive("/about")
+                  ? "text-zinc-950 bg-zinc-100"
+                  : "text-zinc-700 hover:bg-zinc-100"
+              }`}
+            >
+              About
+            </Link>
+          </nav>
+
           {/* Кнопки авторизации */}
           <div className="flex items-center space-x-4">
             <Link
-              to={PATH.LOGIN}
+              to="/login"
               className="text-zinc-700 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-zinc-100"
             >
               Войти
             </Link>
             <Link
-              to={PATH.REGISTER}
+              to="/register"
               className="bg-zinc-950 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors hover:bg-zinc-800"
             >
               Регистрация

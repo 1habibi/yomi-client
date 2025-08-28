@@ -1,13 +1,13 @@
-import type {
-  ApiError,
-  AuthResponse,
-  LoginRequest,
-  RegisterRequest,
-} from "@/lib/api";
-import { apiClient } from "@/lib/api";
+import {
+  authApi,
+  type ApiError,
+  type AuthResponse,
+  type LoginRequest,
+  type RegisterRequest,
+} from "@/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-// Query keys
+// Ключи для кэширования
 export const authKeys = {
   all: ["auth"] as const,
   profile: () => [...authKeys.all, "profile"] as const,
@@ -18,13 +18,11 @@ export function useRegister() {
   const queryClient = useQueryClient();
 
   return useMutation<AuthResponse, ApiError, RegisterRequest>({
-    mutationFn: (data) => apiClient.register(data),
+    mutationFn: (data) => authApi.register(data),
     onSuccess: (data) => {
-      // Сохраняем токены в localStorage
+      // Сохраняем токен
       localStorage.setItem("accessToken", data.accessToken);
-      localStorage.setItem("refreshToken", data.refreshToken);
-
-      // Обновляем кэш профиля
+      // Устанавливаем данные пользователя в кэш
       queryClient.setQueryData(authKeys.profile(), data.user);
     },
   });
@@ -35,13 +33,11 @@ export function useLogin() {
   const queryClient = useQueryClient();
 
   return useMutation<AuthResponse, ApiError, LoginRequest>({
-    mutationFn: (data) => apiClient.login(data),
+    mutationFn: (data) => authApi.login(data),
     onSuccess: (data) => {
-      // Сохраняем токены в localStorage
+      // Сохраняем токен
       localStorage.setItem("accessToken", data.accessToken);
-      localStorage.setItem("refreshToken", data.refreshToken);
-
-      // Обновляем кэш профиля
+      // Устанавливаем данные пользователя в кэш
       queryClient.setQueryData(authKeys.profile(), data.user);
     },
   });
@@ -52,12 +48,11 @@ export function useLogout() {
   const queryClient = useQueryClient();
 
   return useMutation<void, ApiError>({
-    mutationFn: () => apiClient.logout(),
-    onSuccess: () => {
-      // Очищаем токены
+    mutationFn: async () => {
+      await authApi.logout();
       localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
-
+    },
+    onSuccess: () => {
       // Очищаем кэш
       queryClient.clear();
     },
@@ -68,18 +63,26 @@ export function useLogout() {
 export function useProfile() {
   return useQuery({
     queryKey: authKeys.profile(),
-    queryFn: () => apiClient.getProfile(),
+    queryFn: () => authApi.getProfile(),
     enabled: !!localStorage.getItem("accessToken"),
     retry: false,
+    staleTime: 5 * 60 * 1000, // 5 минут
   });
 }
 
-// Хук для проверки авторизации
+// Хук для проверки аутентификации
 export function useIsAuthenticated() {
-  const { data: profile, isLoading } = useProfile();
+  const { data: user, isLoading, isError } = useProfile();
+
   return {
-    isAuthenticated: !!profile,
+    isAuthenticated: !isError && !!user,
     isLoading,
-    user: profile,
+    user,
   };
+}
+
+// Хук для получения текущего пользователя
+export function useCurrentUser() {
+  const { data: user } = useProfile();
+  return user;
 }

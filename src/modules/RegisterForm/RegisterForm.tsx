@@ -11,7 +11,6 @@ import { Input } from "@/components/ui/input";
 import { useRegister } from "@/hooks/useAuth";
 import type { RegisterFormData } from "@/lib/validations";
 import { registerSchema } from "@/lib/validations";
-import { PATH } from "@/router/paths";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@tanstack/react-router";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
@@ -43,7 +42,7 @@ export const RegisterForm = () => {
       });
 
       // Перенаправляем на главную страницу после успешной регистрации
-      navigate({ to: PATH.HOME });
+      navigate({ to: "/" });
     } catch (error: unknown) {
       // Обрабатываем ошибки от сервера
       const errorMessage =

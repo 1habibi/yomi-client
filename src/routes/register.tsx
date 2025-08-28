@@ -1,8 +1,22 @@
 import { RegisterForm } from "@/modules/RegisterForm";
-import { PATH } from "@/router/paths";
-import { Link } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
-export function RegisterPage() {
+export const Route = createFileRoute("/register")({
+  component: RegisterPage,
+  head: () => ({
+    meta: [
+      {
+        name: "description",
+        content: "Регистрация в системе Yomi",
+      },
+      {
+        title: "Регистрация - Yomi",
+      },
+    ],
+  }),
+});
+
+function RegisterPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <div className="w-full max-w-md space-y-8">
@@ -12,7 +26,7 @@ export function RegisterPage() {
           <p className="text-sm text-muted-foreground">
             Уже есть аккаунт?{" "}
             <Link
-              to={PATH.LOGIN}
+              to="/login"
               className="font-medium text-primary hover:underline"
             >
               Войти

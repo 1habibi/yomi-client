@@ -11,7 +11,6 @@ import { Input } from "@/components/ui/input";
 import { useLogin } from "@/hooks/useAuth";
 import type { LoginFormData } from "@/lib/validations";
 import { loginSchema } from "@/lib/validations";
-import { PATH } from "@/router/paths";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@tanstack/react-router";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
@@ -38,14 +37,14 @@ export const LoginForm = () => {
         password: data.password,
       });
 
-      // Перенаправляем на главную страницу после успешной регистрации
-      navigate({ to: PATH.HOME });
+      // Перенаправляем на главную страницу после успешного входа
+      navigate({ to: "/" });
     } catch (error: unknown) {
       // Обрабатываем ошибки от сервера
       const errorMessage =
         error && typeof error === "object" && "message" in error
           ? (error as { message: string }).message
-          : "Произошла ошибка при регистрации";
+          : "Произошла ошибка при входе";
 
       if (errorMessage.includes("email")) {
         form.setError("email", {
