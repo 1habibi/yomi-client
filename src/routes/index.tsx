@@ -1,6 +1,6 @@
-import { useAuth } from "@/components/AuthProvider";
 import { Button } from "@/components/ui/button";
 import { useLogout } from "@/hooks/auth";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Loader2 } from "lucide-react";
 
@@ -22,7 +22,7 @@ export const Route = createFileRoute("/")({
 function HomePage() {
   const {
     auth: { isAuthenticated, user },
-  } = useAuth();
+  } = useAuthContext();
   const logoutMutation = useLogout();
 
   const handleLogout = () => {
