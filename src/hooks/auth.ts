@@ -1,76 +1,66 @@
 import {
   authApi,
-  type ApiError,
   type AuthResponse,
   type LoginRequest,
   type RegisterRequest,
 } from "@/api";
+import type { ApiError } from "@/api/base";
+import { useAuthContext } from "@/hooks/useAuthContext";
+import { tokenStorage } from "@/lib/tokenStorage";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-// Ключи для кэширования
 export const authKeys = {
   all: ["auth"] as const,
   profile: () => [...authKeys.all, "profile"] as const,
 };
 
-// Хук для регистрации
 export function useRegister() {
-  const queryClient = useQueryClient();
-
   return useMutation<AuthResponse, ApiError, RegisterRequest>({
     mutationFn: (data) => authApi.register(data),
-    onSuccess: (data) => {
-      // Сохраняем токен
-      localStorage.setItem("accessToken", data.accessToken);
-      // Устанавливаем данные пользователя в кэш
-      queryClient.setQueryData(authKeys.profile(), data.user);
-    },
   });
 }
 
-// Хук для входа
 export function useLogin() {
   const queryClient = useQueryClient();
+  const { login } = useAuthContext();
 
   return useMutation<AuthResponse, ApiError, LoginRequest>({
     mutationFn: (data) => authApi.login(data),
     onSuccess: (data) => {
-      // Сохраняем токен
-      localStorage.setItem("accessToken", data.accessToken);
-      // Устанавливаем данные пользователя в кэш
+      console.log("data from login", data);
+      tokenStorage.setAccessToken(data.accessToken);
       queryClient.setQueryData(authKeys.profile(), data.user);
+      login(data.user);
     },
   });
 }
 
-// Хук для выхода
 export function useLogout() {
   const queryClient = useQueryClient();
+  const { logout } = useAuthContext();
 
   return useMutation<void, ApiError>({
     mutationFn: async () => {
       await authApi.logout();
-      localStorage.removeItem("accessToken");
+      tokenStorage.removeAccessToken();
     },
     onSuccess: () => {
-      // Очищаем кэш
       queryClient.clear();
+      logout();
     },
   });
 }
 
-// Хук для получения профиля
 export function useProfile() {
   return useQuery({
     queryKey: authKeys.profile(),
     queryFn: () => authApi.getProfile(),
-    enabled: !!localStorage.getItem("accessToken"),
+    enabled: !!tokenStorage.getAccessToken(),
     retry: false,
-    staleTime: 5 * 60 * 1000, // 5 минут
+    staleTime: 5 * 60 * 1000,
   });
 }
 
-// Хук для проверки аутентификации
 export function useIsAuthenticated() {
   const { data: user, isLoading, isError } = useProfile();
 
@@ -81,7 +71,6 @@ export function useIsAuthenticated() {
   };
 }
 
-// Хук для получения текущего пользователя
 export function useCurrentUser() {
   const { data: user } = useProfile();
   return user;

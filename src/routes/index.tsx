@@ -1,5 +1,6 @@
+import { useAuth } from "@/components/AuthProvider";
 import { Button } from "@/components/ui/button";
-import { useIsAuthenticated, useLogout } from "@/hooks/useAuth";
+import { useLogout } from "@/hooks/auth";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Loader2 } from "lucide-react";
 
@@ -19,25 +20,19 @@ export const Route = createFileRoute("/")({
 });
 
 function HomePage() {
-  const { isAuthenticated, isLoading, user } = useIsAuthenticated();
+  const {
+    auth: { isAuthenticated, user },
+  } = useAuth();
   const logoutMutation = useLogout();
 
   const handleLogout = () => {
     logoutMutation.mutate();
   };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
-  }
-
   return (
     <div className="p-8 max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold mb-4">Добро пожаловать в Yomi</h1>
-
+      <h1>User data {JSON.stringify(user)}</h1>
       {isAuthenticated && user ? (
         <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
           <h2 className="text-lg font-semibold text-green-800 mb-2">

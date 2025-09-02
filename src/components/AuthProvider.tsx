@@ -1,49 +1,62 @@
-import { authApi } from "@/api";
-import { authKeys } from "@/hooks/useAuth";
-import { useQueryClient } from "@tanstack/react-query";
-import React, { useEffect } from "react";
+import { useProfile } from "@/hooks/auth";
+import { tokenStorage } from "@/lib/tokenStorage";
+import { createContext, useEffect, useState, type ReactNode } from "react";
 
-interface AuthProviderProps {
-  children: React.ReactNode;
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
+  createdAt: string;
+  isEmailConfirmed: boolean;
 }
 
-// src/auth.tsx
 export interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
-  user:
-    | {
-        id: string;
-        email: string;
-        name: string;
-        role: string;
-        createdAt: string;
-        isEmailConfirmed: boolean;
-      }
-    | undefined;
+  user: User | null;
 }
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const queryClient = useQueryClient();
-  const accessToken = localStorage.getItem("accessToken");
+interface AuthContextType {
+  auth: AuthState;
+  login: (user: User) => void;
+  logout: () => void;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [auth, setAuth] = useState<AuthState>({
+    user: null,
+    isAuthenticated: false,
+    isLoading: false,
+  });
+  const { data: user, isLoading, isError } = useProfile();
 
   useEffect(() => {
-    // При монтировании проверяем токен и загружаем профиль
-    if (accessToken) {
-      authApi
-        .getProfile()
-        .then((user) => {
-          queryClient.setQueryData(authKeys.profile(), user);
-        })
-        .catch(() => {
-          // Если токен невалидный, очищаем
-          localStorage.removeItem("accessToken");
-          queryClient.clear();
-        });
+    if (isLoading) {
+      setAuth((prev) => ({ ...prev, isLoading: true }));
+    } else if (isError) {
+      setAuth({ user: null, isAuthenticated: false, isLoading: false });
+      tokenStorage.removeAccessToken();
+    } else if (user) {
+      setAuth({ user, isAuthenticated: true, isLoading: false });
     }
-  }, [accessToken, queryClient]);
+  }, [user, isLoading, isError]);
 
-  return <>{children}</>;
-};
+  const login = (user: User) => {
+    setAuth({ user, isAuthenticated: true, isLoading: false });
+  };
 
-export default AuthProvider;
+  const logout = () => {
+    setAuth({ user: null, isAuthenticated: false, isLoading: false });
+  };
+
+  return (
+    <AuthContext.Provider value={{ auth, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+export { AuthContext };

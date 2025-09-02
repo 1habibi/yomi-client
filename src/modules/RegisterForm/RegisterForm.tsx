@@ -8,7 +8,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useRegister } from "@/hooks/useAuth";
+import { useRegister } from "@/hooks/auth";
 import type { RegisterFormData } from "@/lib/validations";
 import { registerSchema } from "@/lib/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -40,11 +40,8 @@ export const RegisterForm = () => {
         email: data.email,
         password: data.password,
       });
-
-      // Перенаправляем на главную страницу после успешной регистрации
       navigate({ to: "/" });
     } catch (error: unknown) {
-      // Обрабатываем ошибки от сервера
       const errorMessage =
         error && typeof error === "object" && "message" in error
           ? (error as { message: string }).message

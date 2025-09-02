@@ -1,3 +1,5 @@
+import { tokenStorage } from "@/lib/tokenStorage";
+
 export interface ApiError {
   message: string;
   statusCode: number;
@@ -17,13 +19,6 @@ export interface AuthResponse {
 }
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
-
-// Управление токенами
-export const tokenStorage = {
-  getAccessToken: () => localStorage.getItem("accessToken"),
-  setAccessToken: (token: string) => localStorage.setItem("accessToken", token),
-  removeAccessToken: () => localStorage.removeItem("accessToken"),
-};
 
 export async function request<T>(
   endpoint: string,
@@ -56,7 +51,7 @@ export async function request<T>(
       endpoint !== "/auth/login"
     ) {
       const refreshed = await tryRefreshToken();
-      console.log("REFRESHD:", refreshed);
+      console.log("Обновленный токен из base.api :", refreshed);
       if (refreshed) {
         const newToken = tokenStorage.getAccessToken();
         if (newToken) {

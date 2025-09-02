@@ -8,7 +8,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useLogin } from "@/hooks/useAuth";
+import { useLogin } from "@/hooks/auth";
 import type { LoginFormData } from "@/lib/validations";
 import { loginSchema } from "@/lib/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -32,27 +32,14 @@ export const LoginForm = () => {
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      await loginMutation.mutateAsync({
-        email: data.email,
-        password: data.password,
-      });
-
-      // Перенаправляем на главную страницу после успешного входа
+      await loginMutation.mutateAsync(data);
       navigate({ to: "/" });
-    } catch (error: unknown) {
-      // Обрабатываем ошибки от сервера
+    } catch (error) {
       const errorMessage =
         error && typeof error === "object" && "message" in error
           ? (error as { message: string }).message
           : "Произошла ошибка при входе";
-
-      if (errorMessage.includes("email")) {
-        form.setError("email", {
-          message: "Пользователь с таким email уже существует",
-        });
-      } else {
-        form.setError("root", { message: errorMessage });
-      }
+      form.setError("root", { message: errorMessage });
     }
   };
 

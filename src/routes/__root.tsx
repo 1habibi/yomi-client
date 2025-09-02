@@ -1,4 +1,4 @@
-import type { AuthState } from "@/components/AuthProvider";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import { RootLayout } from "@/layouts";
 import {
   createRootRouteWithContext,
@@ -6,9 +6,8 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 
-// Тип контекста роутера
-interface MyRouterContext {
-  auth: AuthState;
+export interface MyRouterContext {
+  auth: ReturnType<typeof useAuthContext>["auth"];
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({

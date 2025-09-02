@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from "./routes/__root"
 import { Route as RegisterRouteImport } from "./routes/register"
 import { Route as LoginRouteImport } from "./routes/login"
+import { Route as EmailConfirmationRouteImport } from "./routes/email-confirmation"
 import { Route as DashboardRouteImport } from "./routes/dashboard"
 import { Route as AboutRouteImport } from "./routes/about"
 import { Route as IndexRouteImport } from "./routes/index"
@@ -23,6 +24,11 @@ const RegisterRoute = RegisterRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: "/login",
   path: "/login",
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EmailConfirmationRoute = EmailConfirmationRouteImport.update({
+  id: "/email-confirmation",
+  path: "/email-confirmation",
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -45,6 +51,7 @@ export interface FileRoutesByFullPath {
   "/": typeof IndexRoute
   "/about": typeof AboutRoute
   "/dashboard": typeof DashboardRoute
+  "/email-confirmation": typeof EmailConfirmationRoute
   "/login": typeof LoginRoute
   "/register": typeof RegisterRoute
 }
@@ -52,6 +59,7 @@ export interface FileRoutesByTo {
   "/": typeof IndexRoute
   "/about": typeof AboutRoute
   "/dashboard": typeof DashboardRoute
+  "/email-confirmation": typeof EmailConfirmationRoute
   "/login": typeof LoginRoute
   "/register": typeof RegisterRoute
 }
@@ -60,21 +68,42 @@ export interface FileRoutesById {
   "/": typeof IndexRoute
   "/about": typeof AboutRoute
   "/dashboard": typeof DashboardRoute
+  "/email-confirmation": typeof EmailConfirmationRoute
   "/login": typeof LoginRoute
   "/register": typeof RegisterRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: "/" | "/about" | "/dashboard" | "/login" | "/register"
+  fullPaths:
+    | "/"
+    | "/about"
+    | "/dashboard"
+    | "/email-confirmation"
+    | "/login"
+    | "/register"
   fileRoutesByTo: FileRoutesByTo
-  to: "/" | "/about" | "/dashboard" | "/login" | "/register"
-  id: "__root__" | "/" | "/about" | "/dashboard" | "/login" | "/register"
+  to:
+    | "/"
+    | "/about"
+    | "/dashboard"
+    | "/email-confirmation"
+    | "/login"
+    | "/register"
+  id:
+    | "__root__"
+    | "/"
+    | "/about"
+    | "/dashboard"
+    | "/email-confirmation"
+    | "/login"
+    | "/register"
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   DashboardRoute: typeof DashboardRoute
+  EmailConfirmationRoute: typeof EmailConfirmationRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
 }
@@ -93,6 +122,13 @@ declare module "@tanstack/react-router" {
       path: "/login"
       fullPath: "/login"
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    "/email-confirmation": {
+      id: "/email-confirmation"
+      path: "/email-confirmation"
+      fullPath: "/email-confirmation"
+      preLoaderRoute: typeof EmailConfirmationRouteImport
       parentRoute: typeof rootRouteImport
     }
     "/dashboard": {
@@ -123,6 +159,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   DashboardRoute: DashboardRoute,
+  EmailConfirmationRoute: EmailConfirmationRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
 }
