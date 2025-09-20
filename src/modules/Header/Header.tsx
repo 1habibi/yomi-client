@@ -1,21 +1,42 @@
+import Logo from "@/components/Logo/Logo";
+import { ModeToggle } from "@/components/mode-toggle";
+import { useTheme } from "@/components/theme-prodiver";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useLogout } from "@/hooks/auth";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import { Link, useLocation } from "@tanstack/react-router";
 
 export function Header() {
   const location = useLocation();
+  const { auth } = useAuthContext();
+  const { theme } = useTheme();
+  const logoutMutation = useLogout();
 
   const isActive = (path: string) => {
     return location.pathname === path;
   };
 
+  const handleLogout = () => {
+    logoutMutation.mutate();
+  };
+
   return (
-    <header className="bg-white shadow-sm border-b">
+    <header className="border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Логотип */}
-          <div className="flex-shrink-0">
-            <Link to="/" className="text-2xl font-bold">
-              Yomi
-            </Link>
+          <div className="flex items-center">
+            {theme === "dark" ? (
+              <Logo to="/" variant="large" theme="dark" />
+            ) : (
+              <Logo to="/" variant="large" theme="light" />
+            )}
           </div>
 
           {/* Навигация */}
@@ -24,8 +45,8 @@ export function Header() {
               to="/"
               className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                 isActive("/")
-                  ? "text-zinc-950 bg-zinc-100"
-                  : "text-zinc-700 hover:bg-zinc-100"
+                  ? "text-accent-foreground bg-accent"
+                  : "text-foreground hover:bg-accent hover:text-accent-foreground"
               }`}
             >
               Главная
@@ -37,8 +58,8 @@ export function Header() {
               to="/about"
               className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                 isActive("/about")
-                  ? "text-zinc-950 bg-zinc-100"
-                  : "text-zinc-700 hover:bg-zinc-100"
+                  ? "text-accent-foreground bg-accent"
+                  : "text-foreground hover:bg-accent hover:text-accent-foreground"
               }`}
             >
               About
@@ -47,18 +68,34 @@ export function Header() {
 
           {/* Кнопки авторизации */}
           <div className="flex items-center space-x-4">
-            <Link
-              to="/login"
-              className="text-zinc-700 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-zinc-100"
-            >
-              Войти
-            </Link>
-            <Link
-              to="/register"
-              className="bg-zinc-950 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors hover:bg-zinc-800"
-            >
-              Регистрация
-            </Link>
+            {auth.isAuthenticated ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <p className="px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:ring-0 focus:outline-none select-none cursor-pointer">
+                    {auth.user?.name}
+                  </p>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile">Профиль</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout}>
+                    <p className="text-destructive font-bold">Выход</p>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                <Button asChild variant="default">
+                  <Link to="/login">Войти</Link>
+                </Button>
+
+                <Button asChild variant="outline">
+                  <Link to="/register">Регистрация</Link>
+                </Button>
+              </>
+            )}
+            <ModeToggle />
           </div>
 
           {/* Мобильное меню (кнопка) */}

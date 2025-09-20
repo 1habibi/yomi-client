@@ -32,7 +32,6 @@ function HomePage() {
   return (
     <div className="p-8 max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold mb-4">Добро пожаловать в Yomi</h1>
-      <h1>User data {JSON.stringify(user)}</h1>
       {isAuthenticated && user ? (
         <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
           <h2 className="text-lg font-semibold text-green-800 mb-2">

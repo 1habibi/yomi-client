@@ -3,7 +3,7 @@ import { Header } from "../modules/Header/Header";
 
 export function RootLayout() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       <Header />
       <Outlet />
     </div>

@@ -13,8 +13,10 @@ import { Route as RegisterRouteImport } from "./routes/register"
 import { Route as LoginRouteImport } from "./routes/login"
 import { Route as EmailConfirmationRouteImport } from "./routes/email-confirmation"
 import { Route as DashboardRouteImport } from "./routes/dashboard"
-import { Route as AboutRouteImport } from "./routes/about"
+import { Route as AuthenticatedRouteRouteImport } from "./routes/_authenticated/route"
 import { Route as IndexRouteImport } from "./routes/index"
+import { Route as AuthenticatedProfileRouteImport } from "./routes/_authenticated/profile"
+import { Route as AuthenticatedAboutRouteImport } from "./routes/_authenticated/about"
 
 const RegisterRoute = RegisterRouteImport.update({
   id: "/register",
@@ -36,9 +38,8 @@ const DashboardRoute = DashboardRouteImport.update({
   path: "/dashboard",
   getParentRoute: () => rootRouteImport,
 } as any)
-const AboutRoute = AboutRouteImport.update({
-  id: "/about",
-  path: "/about",
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: "/_authenticated",
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -46,62 +47,80 @@ const IndexRoute = IndexRouteImport.update({
   path: "/",
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: "/profile",
+  path: "/profile",
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAboutRoute = AuthenticatedAboutRouteImport.update({
+  id: "/about",
+  path: "/about",
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute
-  "/about": typeof AboutRoute
   "/dashboard": typeof DashboardRoute
   "/email-confirmation": typeof EmailConfirmationRoute
   "/login": typeof LoginRoute
   "/register": typeof RegisterRoute
+  "/about": typeof AuthenticatedAboutRoute
+  "/profile": typeof AuthenticatedProfileRoute
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute
-  "/about": typeof AboutRoute
   "/dashboard": typeof DashboardRoute
   "/email-confirmation": typeof EmailConfirmationRoute
   "/login": typeof LoginRoute
   "/register": typeof RegisterRoute
+  "/about": typeof AuthenticatedAboutRoute
+  "/profile": typeof AuthenticatedProfileRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   "/": typeof IndexRoute
-  "/about": typeof AboutRoute
+  "/_authenticated": typeof AuthenticatedRouteRouteWithChildren
   "/dashboard": typeof DashboardRoute
   "/email-confirmation": typeof EmailConfirmationRoute
   "/login": typeof LoginRoute
   "/register": typeof RegisterRoute
+  "/_authenticated/about": typeof AuthenticatedAboutRoute
+  "/_authenticated/profile": typeof AuthenticatedProfileRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | "/"
-    | "/about"
     | "/dashboard"
     | "/email-confirmation"
     | "/login"
     | "/register"
+    | "/about"
+    | "/profile"
   fileRoutesByTo: FileRoutesByTo
   to:
     | "/"
-    | "/about"
     | "/dashboard"
     | "/email-confirmation"
     | "/login"
     | "/register"
+    | "/about"
+    | "/profile"
   id:
     | "__root__"
     | "/"
-    | "/about"
+    | "/_authenticated"
     | "/dashboard"
     | "/email-confirmation"
     | "/login"
     | "/register"
+    | "/_authenticated/about"
+    | "/_authenticated/profile"
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   DashboardRoute: typeof DashboardRoute
   EmailConfirmationRoute: typeof EmailConfirmationRoute
   LoginRoute: typeof LoginRoute
@@ -138,11 +157,11 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
-    "/about": {
-      id: "/about"
-      path: "/about"
-      fullPath: "/about"
-      preLoaderRoute: typeof AboutRouteImport
+    "/_authenticated": {
+      id: "/_authenticated"
+      path: ""
+      fullPath: ""
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     "/": {
@@ -152,12 +171,39 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    "/_authenticated/profile": {
+      id: "/_authenticated/profile"
+      path: "/profile"
+      fullPath: "/profile"
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    "/_authenticated/about": {
+      id: "/_authenticated/about"
+      path: "/about"
+      fullPath: "/about"
+      preLoaderRoute: typeof AuthenticatedAboutRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAboutRoute: typeof AuthenticatedAboutRoute
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAboutRoute: AuthenticatedAboutRoute,
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   DashboardRoute: DashboardRoute,
   EmailConfirmationRoute: EmailConfirmationRoute,
   LoginRoute: LoginRoute,

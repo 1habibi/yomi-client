@@ -3,6 +3,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import ReactDOM from "react-dom/client";
 import { AuthProvider } from "./components/AuthProvider.tsx";
 import { Router } from "./components/Router.tsx";
+import { ThemeProvider } from "./components/theme-prodiver.tsx";
 import "./index.css";
 import { queryClient } from "./lib/query-client.ts";
 
@@ -13,8 +14,10 @@ if (!rootElement.innerHTML) {
   root.render(
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <Router />
-        <ReactQueryDevtools initialIsOpen={false} />
+        <ThemeProvider>
+          <Router />
+          <ReactQueryDevtools initialIsOpen={false} />
+        </ThemeProvider>
       </AuthProvider>
     </QueryClientProvider>,
   );

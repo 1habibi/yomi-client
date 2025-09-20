@@ -29,18 +29,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [auth, setAuth] = useState<AuthState>({
     user: null,
     isAuthenticated: false,
-    isLoading: false,
+    isLoading: true, // Start with loading true to prevent premature redirects
   });
+  
   const { data: user, isLoading, isError } = useProfile();
 
   useEffect(() => {
     if (isLoading) {
-      setAuth((prev) => ({ ...prev, isLoading: true }));
+      setAuth(prev => ({ ...prev, isLoading: true }));
     } else if (isError) {
       setAuth({ user: null, isAuthenticated: false, isLoading: false });
       tokenStorage.removeAccessToken();
     } else if (user) {
       setAuth({ user, isAuthenticated: true, isLoading: false });
+    } else {
+      // Handle case when user is not authenticated
+      setAuth({ user: null, isAuthenticated: false, isLoading: false });
     }
   }, [user, isLoading, isError]);
 
