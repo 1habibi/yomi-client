@@ -1,1 +1,2 @@
-export * from "./authApi.ts";
+export * from "./anime-api.ts";
+export * from "./auth-api.ts";

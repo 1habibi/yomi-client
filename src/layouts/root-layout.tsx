@@ -1,5 +1,5 @@
 import { Outlet } from "@tanstack/react-router";
-import { Header } from "../modules/Header/Header";
+import { Header } from "../modules/header/header";
 
 export function RootLayout() {
   return (

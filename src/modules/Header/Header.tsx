@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useLogout } from "@/hooks/auth";
-import { useAuthContext } from "@/hooks/useAuthContext";
+import { useAuthContext } from "@/hooks/use-auth-context";
 import { Link, useLocation } from "@tanstack/react-router";
 
 export function Header() {

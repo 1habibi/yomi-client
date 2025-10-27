@@ -5,8 +5,8 @@ import {
   type RegisterRequest,
 } from "@/api";
 import type { ApiError } from "@/api/base";
-import { useAuthContext } from "@/hooks/useAuthContext";
-import { tokenStorage } from "@/lib/tokenStorage";
+import { useAuthContext } from "@/hooks/use-auth-context";
+import { tokenStorage } from "@/lib/token-storage";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const authKeys = {

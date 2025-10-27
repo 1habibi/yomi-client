@@ -1,4 +1,4 @@
-import { tokenStorage } from "@/lib/tokenStorage";
+import { tokenStorage } from "@/lib/token-storage";
 
 export interface ApiError {
   message: string;

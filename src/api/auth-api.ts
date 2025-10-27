@@ -1,5 +1,5 @@
-import type { User } from "@/components/AuthProvider";
-import { tokenStorage } from "@/lib/tokenStorage";
+import type { User } from "@/components/auth-provider";
+import { tokenStorage } from "@/lib/token-storage";
 import { request } from "./base";
 
 export interface RegisterRequest {
