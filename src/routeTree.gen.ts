@@ -13,6 +13,7 @@ import { Route as RegisterRouteImport } from "./routes/register"
 import { Route as LoginRouteImport } from "./routes/login"
 import { Route as EmailConfirmationRouteImport } from "./routes/email-confirmation"
 import { Route as DashboardRouteImport } from "./routes/dashboard"
+import { Route as AnimeRouteImport } from "./routes/anime"
 import { Route as AuthenticatedRouteRouteImport } from "./routes/_authenticated/route"
 import { Route as IndexRouteImport } from "./routes/index"
 import { Route as AuthenticatedProfileRouteImport } from "./routes/_authenticated/profile"
@@ -38,6 +39,11 @@ const DashboardRoute = DashboardRouteImport.update({
   path: "/dashboard",
   getParentRoute: () => rootRouteImport,
 } as any)
+const AnimeRoute = AnimeRouteImport.update({
+  id: "/anime",
+  path: "/anime",
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: "/_authenticated",
   getParentRoute: () => rootRouteImport,
@@ -60,6 +66,7 @@ const AuthenticatedAboutRoute = AuthenticatedAboutRouteImport.update({
 
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute
+  "/anime": typeof AnimeRoute
   "/dashboard": typeof DashboardRoute
   "/email-confirmation": typeof EmailConfirmationRoute
   "/login": typeof LoginRoute
@@ -69,6 +76,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute
+  "/anime": typeof AnimeRoute
   "/dashboard": typeof DashboardRoute
   "/email-confirmation": typeof EmailConfirmationRoute
   "/login": typeof LoginRoute
@@ -80,6 +88,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   "/": typeof IndexRoute
   "/_authenticated": typeof AuthenticatedRouteRouteWithChildren
+  "/anime": typeof AnimeRoute
   "/dashboard": typeof DashboardRoute
   "/email-confirmation": typeof EmailConfirmationRoute
   "/login": typeof LoginRoute
@@ -91,6 +100,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | "/"
+    | "/anime"
     | "/dashboard"
     | "/email-confirmation"
     | "/login"
@@ -100,6 +110,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | "/"
+    | "/anime"
     | "/dashboard"
     | "/email-confirmation"
     | "/login"
@@ -110,6 +121,7 @@ export interface FileRouteTypes {
     | "__root__"
     | "/"
     | "/_authenticated"
+    | "/anime"
     | "/dashboard"
     | "/email-confirmation"
     | "/login"
@@ -121,6 +133,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AnimeRoute: typeof AnimeRoute
   DashboardRoute: typeof DashboardRoute
   EmailConfirmationRoute: typeof EmailConfirmationRoute
   LoginRoute: typeof LoginRoute
@@ -155,6 +168,13 @@ declare module "@tanstack/react-router" {
       path: "/dashboard"
       fullPath: "/dashboard"
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    "/anime": {
+      id: "/anime"
+      path: "/anime"
+      fullPath: "/anime"
+      preLoaderRoute: typeof AnimeRouteImport
       parentRoute: typeof rootRouteImport
     }
     "/_authenticated": {
@@ -204,6 +224,7 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AnimeRoute: AnimeRoute,
   DashboardRoute: DashboardRoute,
   EmailConfirmationRoute: EmailConfirmationRoute,
   LoginRoute: LoginRoute,
