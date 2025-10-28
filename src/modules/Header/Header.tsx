@@ -1,4 +1,5 @@
-import Logo from "@/components/Logo/Logo";
+import { AnimeSearchModal } from "@/components/anime-search-modal";
+import Logo from "@/components/logo/logo";
 import { ModeToggle } from "@/components/mode-toggle";
 import { useTheme } from "@/components/theme-prodiver";
 import { Button } from "@/components/ui/button";
@@ -28,50 +29,48 @@ export function Header() {
 
   return (
     <header className="border-b">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Логотип */}
-          <div className="flex items-center">
+      <div className="container mx-auto py-2">
+        <div className="grid grid-cols-12 items-center">
+          {/* Logo */}
+          <div className="col-span-2">
             {theme === "dark" ? (
               <Logo to="/" variant="large" theme="dark" />
             ) : (
               <Logo to="/" variant="large" theme="light" />
             )}
           </div>
-
-          {/* Навигация */}
-          <nav className="hidden md:flex space-x-8">
+          {/* Nav */}
+          <nav className="col-span-6 flex items-center gap-8">
             <Link
               to="/"
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              className={`rounded-lg px-3 py-2 text-sm transition-colors ${
                 isActive("/")
                   ? "text-accent-foreground bg-accent"
-                  : "text-foreground hover:bg-accent hover:text-accent-foreground"
+                  : "hover:bg-accent hover:text-accent-foreground"
               }`}
             >
               Главная
             </Link>
-          </nav>
-
-          <nav className="hidden md:flex space-x-8">
             <Link
               to="/about"
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              className={`rounded-lg px-3 py-2 text-sm transition-colors ${
                 isActive("/about")
                   ? "text-accent-foreground bg-accent"
-                  : "text-foreground hover:bg-accent hover:text-accent-foreground"
+                  : "hover:bg-accent hover:text-accent-foreground"
               }`}
             >
-              About
+              О нас
             </Link>
           </nav>
-
-          {/* Кнопки авторизации */}
-          <div className="flex items-center space-x-4">
+          <div className="col-span-2 mx-5 flex items-center space-x-4">
+            <AnimeSearchModal></AnimeSearchModal>
+          </div>
+          {/* Auth buttons */}
+          <div className="col-span-2 flex items-center space-x-4">
             {auth.isAuthenticated ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <p className="px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:ring-0 focus:outline-none select-none cursor-pointer">
+                  <p className="hover:bg-accent hover:text-accent-foreground cursor-pointer rounded-lg px-3 py-2 text-sm transition-colors select-none focus:ring-0 focus:outline-none">
                     {auth.user?.name}
                   </p>
                 </DropdownMenuTrigger>
@@ -80,45 +79,22 @@ export function Header() {
                     <Link to="/profile">Профиль</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleLogout}>
-                    <p className="text-destructive font-bold">Выход</p>
+                    <p className="text-destructive">Выход</p>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
               <>
                 <Button asChild variant="default">
-                  <Link to="/login">Войти</Link>
+                  <Link to="/login">Вход</Link>
                 </Button>
 
-                <Button asChild variant="outline">
+                <Button asChild variant="secondary">
                   <Link to="/register">Регистрация</Link>
                 </Button>
               </>
             )}
             <ModeToggle />
-          </div>
-
-          {/* Мобильное меню (кнопка) */}
-          <div className="md:hidden">
-            <button
-              type="button"
-              className="text-zinc-700 hover:text-zinc-600 focus:outline-none focus:text-zinc-600"
-              aria-label="Открыть меню"
-            >
-              <svg
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            </button>
           </div>
         </div>
       </div>
