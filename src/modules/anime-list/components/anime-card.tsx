@@ -1,6 +1,6 @@
+import type { AnimeItem } from "@/api/types";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import type { AnimeItem } from "@/hooks/use-anime";
 import { Star } from "lucide-react";
 import React from "react";
 

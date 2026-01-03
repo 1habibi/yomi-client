@@ -1,3 +1,4 @@
+import type { Genre } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -10,7 +11,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Genre } from "@/hooks/use-anime";
 import type { AnimeSearch } from "@/routes/anime";
 import { Filter, Search, X } from "lucide-react";
 import React from "react";
