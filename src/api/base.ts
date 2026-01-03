@@ -1,25 +1,9 @@
 import { tokenStorage } from "@/lib/token-storage";
-
-export interface ApiError {
-  message: string;
-  statusCode: number;
-  error?: string;
-}
-
-export interface AuthResponse {
-  user: {
-    id: string;
-    email: string;
-    name: string;
-    role: string;
-    createdAt: string;
-    isEmailConfirmed: boolean;
-  };
-  accessToken: string;
-}
+import type { ApiError, AuthResponse } from "./types";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
+// Универсальная функция для выполнения HTTP запросов
 export async function request<T>(
   endpoint: string,
   options: RequestInit = {},
@@ -51,7 +35,6 @@ export async function request<T>(
       endpoint !== "/auth/login"
     ) {
       const refreshed = await tryRefreshToken();
-      console.log("Обновленный токен из base.api :", refreshed);
       if (refreshed) {
         const newToken = tokenStorage.getAccessToken();
         if (newToken) {

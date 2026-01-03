@@ -1,3 +1,5 @@
+// TODO: интеграция
+
 interface PageConfig {
   title: string;
   description?: string;

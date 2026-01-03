@@ -1,94 +1,16 @@
 import { animeApi } from "@/api/anime-api";
 import type { ApiError } from "@/api/base";
+import type {
+  AnimeFilters,
+  AnimeItem,
+  AnimeStats,
+  Genre,
+  PaginatedAnimeResponse,
+} from "@/api/types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import React, { useCallback, useState } from "react";
-
-export interface AnimeFilters {
-  search?: string;
-  sort_by?: "title" | "year" | "updated_at" | "created_at";
-  sort_order?: "asc" | "desc";
-  year_from?: number;
-  year_to?: number;
-  only_ongoing?: boolean;
-  only_completed?: boolean;
-  genre?: string;
-}
-
-export interface AnimeStats {
-  total: number;
-  ongoing: number;
-  completed: number;
-  average_rating: number;
-}
-
-export interface AnimeItem {
-  id: number;
-  kodik_id: string;
-  kodik_type: string;
-  link: string;
-  title: string;
-  title_orig?: string;
-  other_title?: string;
-  year?: number;
-  last_season: number;
-  last_episode: number;
-  episodes_count: number;
-  kinopoisk_id?: number;
-  imdb_id?: number;
-  shikimori_id?: number;
-  quality?: string;
-  camrip?: number;
-  lgbt?: number;
-  created_at: Date;
-  updated_at: Date;
-  description?: string;
-  anime_description?: string;
-  poster_url?: string;
-  anime_poster_url?: string;
-  premiere_world?: Date;
-  aried_at: Date;
-  released_at?: Date;
-  rating_mpaa: number;
-  minimal_age: number;
-  episodes_total: number;
-  episodes_aired: number;
-  imdb_rating?: number;
-  imdb_votes?: number;
-  shikimori_rating?: number;
-  shikimori_votes?: number;
-  all_status?: string;
-  next_episode_at?: Date;
-  anime_kind?: string;
-  duration?: number;
-  anime_genres?: {
-    genre: {
-      id: number;
-      name: string;
-    };
-  }[];
-  anime_translations?: {
-    id: number;
-    title: string;
-    trans_type: string;
-  }[];
-  anime_studios?: {
-    studio: {
-      id: number;
-      name: string;
-    };
-  }[];
-  anime_persons?: {
-    person: {
-      id: number;
-      name: string;
-    };
-    role: string;
-  }[];
-  blocked_countries?: {
-    id: number;
-    country?: string;
-  }[];
-}
+import React, { useCallback, useMemo, useState } from "react";
+import type { AnimeSearch } from "../routes/anime";
+import { Route } from "../routes/anime";
 
 export const animeKeys = {
   all: ["anime"] as const,
@@ -100,18 +22,6 @@ export const animeKeys = {
   detail: (id: number) => [...animeKeys.all, "detail", id] as const,
 };
 
-export interface PaginatedAnimeResponse {
-  data: AnimeItem[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    total_pages: number;
-    has_next: boolean;
-    has_prev: boolean;
-  };
-}
-
 export function useAnimeList(
   page: number = 1,
   filters: AnimeFilters = {},
@@ -121,7 +31,8 @@ export function useAnimeList(
     queryKey: animeKeys.list(page, filters),
     queryFn: () => animeApi.getAnime(page, filters),
     enabled,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 5 * 60 * 1000, // 5 минут
+    gcTime: 10 * 60 * 1000, // 10 минут в кэше
   });
 }
 
@@ -129,23 +40,17 @@ export function useAnimeStats() {
   return useQuery<AnimeStats, ApiError>({
     queryKey: animeKeys.stats(),
     queryFn: () => animeApi.getStats(),
-    staleTime: 10 * 60 * 1000,
+    staleTime: 10 * 60 * 1000, // 10 минут
+    gcTime: 30 * 60 * 1000, // 30 минут в кэше
   });
-}
-
-export interface Genre {
-  id: number;
-  name: string;
-  _count?: {
-    anime_genres?: number;
-  };
 }
 
 export function useAnimeGenres() {
   return useQuery<Genre[], ApiError>({
     queryKey: animeKeys.genres(),
     queryFn: () => animeApi.getGenres(),
-    staleTime: 30 * 60 * 1000,
+    staleTime: 30 * 60 * 1000, // 30 минут - жанры редко меняются
+    gcTime: 60 * 60 * 1000, // 1 час в кэше
   });
 }
 
@@ -154,7 +59,8 @@ export function useAnime(id: number, enabled: boolean = true) {
     queryKey: animeKeys.detail(id),
     queryFn: () => animeApi.getById(id),
     enabled: enabled && !!id,
-    staleTime: 10 * 60 * 1000,
+    staleTime: 10 * 60 * 1000, // 10 минут
+    gcTime: 30 * 60 * 1000, // 30 минут в кэше
   });
 }
 
@@ -163,49 +69,116 @@ export function useAnimeByKodikId(kodikId: string, enabled: boolean = true) {
     queryKey: [...animeKeys.all, "kodik", kodikId],
     queryFn: () => animeApi.getByKodikId(kodikId),
     enabled: enabled && !!kodikId,
-    staleTime: 10 * 60 * 1000,
+    staleTime: 10 * 60 * 1000, // 10 минут
+    gcTime: 30 * 60 * 1000, // 30 минут в кэше
   });
 }
 
-export function useAnimePagination(defaultFilters: AnimeFilters = {}) {
+/**
+ * Оптимизированный хук для пагинации аниме
+ * Автоматически синхронизируется с URL параметрами
+ * Поддерживает prefetching следующей страницы
+ */
+export function useAnimePagination(options?: { enablePrefetch?: boolean }) {
   const queryClient = useQueryClient();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [currentFilters, setCurrentFilters] =
-    useState<AnimeFilters>(defaultFilters);
+  const searchParams = Route.useSearch();
+  const navigate = Route.useNavigate();
+
+  const currentPage = searchParams.page;
+
+  const currentFilters = useMemo<AnimeFilters>(
+    () => ({
+      search: searchParams.search,
+      sort_by: searchParams.sort_by,
+      sort_order: searchParams.sort_order,
+      year_from: searchParams.year_from,
+      year_to: searchParams.year_to,
+      only_ongoing: searchParams.only_ongoing,
+      only_completed: searchParams.only_completed,
+      genre: searchParams.genre,
+    }),
+    [searchParams],
+  );
 
   const currentQuery = useAnimeList(currentPage, currentFilters);
 
-  const searchAnime = useCallback((query: string) => {
-    setCurrentFilters((prev) => ({
-      ...prev,
-      search: query || undefined,
-    }));
-    setCurrentPage(1);
-  }, []);
+  // Prefetch следующей страницы для улучшения UX
+  React.useEffect(() => {
+    if (options?.enablePrefetch && currentQuery.data?.pagination.has_next) {
+      queryClient.prefetchQuery({
+        queryKey: animeKeys.list(currentPage + 1, currentFilters),
+        queryFn: () => animeApi.getAnime(currentPage + 1, currentFilters),
+        staleTime: 5 * 60 * 1000,
+      });
+    }
+  }, [
+    currentPage,
+    currentFilters,
+    currentQuery.data?.pagination.has_next,
+    queryClient,
+    options?.enablePrefetch,
+  ]);
 
-  const filterAnime = useCallback((newFilters: AnimeFilters) => {
-    setCurrentFilters((prev) => ({
-      ...prev,
-      ...newFilters,
-    }));
-    setCurrentPage(1);
-  }, []);
+  const updateSearchParams = useCallback(
+    (updates: Partial<AnimeSearch>) => {
+      navigate({
+        search: (prev: AnimeSearch) => {
+          const newSearch = {
+            ...prev,
+            ...updates,
+          };
 
-  const goToPage = useCallback((newPage: number) => {
-    setCurrentPage(newPage);
-  }, []);
+          // Сбрасываем страницу на 1 при изменении фильтров
+          if (Object.keys(updates).some((key) => key !== "page")) {
+            newSearch.page = 1;
+          }
+
+          return newSearch;
+        },
+        replace: true,
+      });
+    },
+    [navigate],
+  );
+
+  const searchAnime = useCallback(
+    (query: string) => {
+      updateSearchParams({
+        search: query || undefined,
+        page: 1,
+      });
+    },
+    [updateSearchParams],
+  );
+
+  const filterAnime = useCallback(
+    (newFilters: Partial<AnimeSearch>) => {
+      updateSearchParams({
+        ...newFilters,
+        page: 1,
+      });
+    },
+    [updateSearchParams],
+  );
+
+  const goToPage = useCallback(
+    (newPage: number) => {
+      updateSearchParams({ page: newPage });
+    },
+    [updateSearchParams],
+  );
 
   const nextPage = useCallback(() => {
     if (currentQuery.data?.pagination.has_next) {
-      setCurrentPage((prev) => prev + 1);
+      updateSearchParams({ page: currentPage + 1 });
     }
-  }, [currentQuery.data?.pagination.has_next]);
+  }, [currentQuery.data?.pagination.has_next, currentPage, updateSearchParams]);
 
   const prevPage = useCallback(() => {
     if (currentQuery.data?.pagination.has_prev) {
-      setCurrentPage((prev) => prev - 1);
+      updateSearchParams({ page: currentPage - 1 });
     }
-  }, [currentQuery.data?.pagination.has_prev]);
+  }, [currentQuery.data?.pagination.has_prev, currentPage, updateSearchParams]);
 
   const refresh = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: animeKeys.lists() });

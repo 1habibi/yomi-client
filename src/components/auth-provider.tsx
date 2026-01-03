@@ -1,15 +1,7 @@
+import type { User } from "@/api/types";
 import { useProfile } from "@/hooks/auth";
 import { tokenStorage } from "@/lib/token-storage";
 import { createContext, useEffect, useState, type ReactNode } from "react";
-
-export interface User {
-  id: string;
-  email: string;
-  name: string;
-  role: string;
-  createdAt: string;
-  isEmailConfirmed: boolean;
-}
 
 export interface AuthState {
   isAuthenticated: boolean;

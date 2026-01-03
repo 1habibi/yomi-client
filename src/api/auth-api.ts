@@ -1,6 +1,6 @@
-import type { User } from "@/components/auth-provider";
 import { tokenStorage } from "@/lib/token-storage";
 import { request } from "./base";
+import type { AuthResponse } from "./types";
 
 export interface RegisterRequest {
   email: string;
@@ -11,11 +11,6 @@ export interface RegisterRequest {
 export interface LoginRequest {
   email: string;
   password: string;
-}
-
-export interface AuthResponse {
-  user: User;
-  accessToken: string;
 }
 
 export const authApi = {

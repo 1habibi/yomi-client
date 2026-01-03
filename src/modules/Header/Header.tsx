@@ -1,7 +1,7 @@
 import { AnimeSearchModal } from "@/components/anime-search-modal";
 import Logo from "@/components/logo/logo";
 import { ModeToggle } from "@/components/mode-toggle";
-import { useTheme } from "@/components/theme-prodiver";
+import { useTheme } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -31,7 +31,6 @@ export function Header() {
     <header className="border-b">
       <div className="container mx-auto py-2">
         <div className="grid grid-cols-12 items-center">
-          {/* Logo */}
           <div className="col-span-2">
             {theme === "dark" ? (
               <Logo to="/" variant="large" theme="dark" />
@@ -39,7 +38,6 @@ export function Header() {
               <Logo to="/" variant="large" theme="light" />
             )}
           </div>
-          {/* Nav */}
           <nav className="col-span-6 flex items-center gap-8">
             <Link
               to="/"
@@ -52,20 +50,19 @@ export function Header() {
               Главная
             </Link>
             <Link
-              to="/about"
+              to="/anime"
               className={`rounded-lg px-3 py-2 text-sm transition-colors ${
-                isActive("/about")
+                isActive("/anime")
                   ? "text-accent-foreground bg-accent"
                   : "hover:bg-accent hover:text-accent-foreground"
               }`}
             >
-              О нас
+              Каталог
             </Link>
           </nav>
           <div className="col-span-2 mx-5 flex items-center space-x-4">
             <AnimeSearchModal></AnimeSearchModal>
           </div>
-          {/* Auth buttons */}
           <div className="col-span-2 flex items-center space-x-4">
             {auth.isAuthenticated ? (
               <DropdownMenu>

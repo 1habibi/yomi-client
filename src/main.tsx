@@ -3,7 +3,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import ReactDOM from "react-dom/client";
 import { AuthProvider } from "./components/auth-provider.tsx";
 import { Router } from "./components/router.tsx";
-import { ThemeProvider } from "./components/theme-prodiver.tsx";
+import { ThemeProvider } from "./components/theme-provider.tsx";
 import "./index.css";
 import { queryClient } from "./lib/query-client.ts";
 
