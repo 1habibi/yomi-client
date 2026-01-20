@@ -8,16 +8,14 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./routes/__root"
-import { Route as RegisterRouteImport } from "./routes/register"
-import { Route as LoginRouteImport } from "./routes/login"
-import { Route as EmailConfirmationRouteImport } from "./routes/email-confirmation"
-import { Route as DashboardRouteImport } from "./routes/dashboard"
-import { Route as AnimeRouteImport } from "./routes/anime"
-import { Route as AuthenticatedRouteRouteImport } from "./routes/_authenticated/route"
-import { Route as IndexRouteImport } from "./routes/index"
-import { Route as AuthenticatedProfileRouteImport } from "./routes/_authenticated/profile"
-import { Route as AuthenticatedAboutRouteImport } from "./routes/_authenticated/about"
+import { Route as rootRouteImport } from "./pages/__root"
+import { Route as RegisterRouteImport } from "./pages/register"
+import { Route as LoginRouteImport } from "./pages/login"
+import { Route as EmailConfirmationRouteImport } from "./pages/email-confirmation"
+import { Route as AnimeRouteImport } from "./pages/anime"
+import { Route as AuthenticatedRouteRouteImport } from "./pages/_authenticated/route"
+import { Route as IndexRouteImport } from "./pages/index"
+import { Route as AuthenticatedProfileRouteImport } from "./pages/_authenticated/profile"
 
 const RegisterRoute = RegisterRouteImport.update({
   id: "/register",
@@ -32,11 +30,6 @@ const LoginRoute = LoginRouteImport.update({
 const EmailConfirmationRoute = EmailConfirmationRouteImport.update({
   id: "/email-confirmation",
   path: "/email-confirmation",
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: "/dashboard",
-  path: "/dashboard",
   getParentRoute: () => rootRouteImport,
 } as any)
 const AnimeRoute = AnimeRouteImport.update({
@@ -58,30 +51,21 @@ const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   path: "/profile",
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedAboutRoute = AuthenticatedAboutRouteImport.update({
-  id: "/about",
-  path: "/about",
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute
   "/anime": typeof AnimeRoute
-  "/dashboard": typeof DashboardRoute
   "/email-confirmation": typeof EmailConfirmationRoute
   "/login": typeof LoginRoute
   "/register": typeof RegisterRoute
-  "/about": typeof AuthenticatedAboutRoute
   "/profile": typeof AuthenticatedProfileRoute
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute
   "/anime": typeof AnimeRoute
-  "/dashboard": typeof DashboardRoute
   "/email-confirmation": typeof EmailConfirmationRoute
   "/login": typeof LoginRoute
   "/register": typeof RegisterRoute
-  "/about": typeof AuthenticatedAboutRoute
   "/profile": typeof AuthenticatedProfileRoute
 }
 export interface FileRoutesById {
@@ -89,11 +73,9 @@ export interface FileRoutesById {
   "/": typeof IndexRoute
   "/_authenticated": typeof AuthenticatedRouteRouteWithChildren
   "/anime": typeof AnimeRoute
-  "/dashboard": typeof DashboardRoute
   "/email-confirmation": typeof EmailConfirmationRoute
   "/login": typeof LoginRoute
   "/register": typeof RegisterRoute
-  "/_authenticated/about": typeof AuthenticatedAboutRoute
   "/_authenticated/profile": typeof AuthenticatedProfileRoute
 }
 export interface FileRouteTypes {
@@ -101,32 +83,26 @@ export interface FileRouteTypes {
   fullPaths:
     | "/"
     | "/anime"
-    | "/dashboard"
     | "/email-confirmation"
     | "/login"
     | "/register"
-    | "/about"
     | "/profile"
   fileRoutesByTo: FileRoutesByTo
   to:
     | "/"
     | "/anime"
-    | "/dashboard"
     | "/email-confirmation"
     | "/login"
     | "/register"
-    | "/about"
     | "/profile"
   id:
     | "__root__"
     | "/"
     | "/_authenticated"
     | "/anime"
-    | "/dashboard"
     | "/email-confirmation"
     | "/login"
     | "/register"
-    | "/_authenticated/about"
     | "/_authenticated/profile"
   fileRoutesById: FileRoutesById
 }
@@ -134,7 +110,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AnimeRoute: typeof AnimeRoute
-  DashboardRoute: typeof DashboardRoute
   EmailConfirmationRoute: typeof EmailConfirmationRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
@@ -161,13 +136,6 @@ declare module "@tanstack/react-router" {
       path: "/email-confirmation"
       fullPath: "/email-confirmation"
       preLoaderRoute: typeof EmailConfirmationRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    "/dashboard": {
-      id: "/dashboard"
-      path: "/dashboard"
-      fullPath: "/dashboard"
-      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     "/anime": {
@@ -198,23 +166,14 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof AuthenticatedProfileRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    "/_authenticated/about": {
-      id: "/_authenticated/about"
-      path: "/about"
-      fullPath: "/about"
-      preLoaderRoute: typeof AuthenticatedAboutRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedAboutRoute: typeof AuthenticatedAboutRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedAboutRoute: AuthenticatedAboutRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
 }
 
@@ -225,7 +184,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AnimeRoute: AnimeRoute,
-  DashboardRoute: DashboardRoute,
   EmailConfirmationRoute: EmailConfirmationRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
