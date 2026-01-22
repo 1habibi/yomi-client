@@ -1,13 +1,9 @@
-export { animeApi } from "./api";
-
 export type {
   AnimeFilters,
   AnimeGenreItem,
   AnimeItem,
-  AnimePerson,
   AnimePersonRole,
   AnimeStats,
-  AnimeStudio,
   AnimeStudioItem,
   AnimeTranslation,
   BaseFilters,
@@ -21,8 +17,6 @@ export type {
 export { animeFiltersSchema } from "./types";
 
 export { useAnimeList } from "./hooks/use-anime-list";
-
-export { animeKeys } from "./constants/query-keys";
 
 export { SORT_OPTIONS, STATUS_OPTIONS } from "./constants/sort-options";
 

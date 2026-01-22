@@ -1,5 +1,28 @@
 import { z } from "zod";
 
+import type {
+  AnimeGenreItemDto,
+  AnimePersonItemDto,
+  AnimeResponseDto,
+  AnimeStudioItemDto,
+  GenreResponseDto,
+  PaginatedAnimeResponseDto,
+  PaginationDto,
+  StatsResponseDto,
+  TranslationDto,
+} from "@/shared/api/generated/model";
+
+// Алиасы на orval типы для обратной совместимости
+export type AnimeItem = AnimeResponseDto;
+export type PaginatedAnimeResponse = PaginatedAnimeResponseDto;
+export type AnimeStats = StatsResponseDto;
+export type Genre = GenreResponseDto;
+export type AnimeGenreItem = AnimeGenreItemDto;
+export type AnimePersonRole = AnimePersonItemDto;
+export type AnimeStudioItem = AnimeStudioItemDto;
+export type AnimeTranslation = TranslationDto;
+export type PaginationMeta = PaginationDto;
+
 export interface PaginationData {
   page: number;
   total_pages: number;
@@ -34,124 +57,9 @@ export const animeFiltersSchema = z.object({
 
 export type AnimeFilters = z.infer<typeof animeFiltersSchema>;
 
-export interface AnimeStats {
-  total: number;
-  ongoing: number;
-  completed: number;
-  average_rating: number;
-}
-
-export interface AnimePerson {
-  id: number;
-  name: string;
-}
-
-export interface AnimeStudio {
-  id: number;
-  name: string;
-}
-
-export interface AnimeGenreItem {
-  genre: {
-    id: number;
-    name: string;
-  };
-}
-
-export interface AnimeTranslation {
-  id: number;
-  title: string;
-  trans_type: string;
-}
-
-export interface AnimePersonRole {
-  person: AnimePerson;
-  role: string;
-}
-
-export interface AnimeStudioItem {
-  studio: AnimeStudio;
-}
-
-export interface AnimeItem {
-  id: number;
-  kodik_id: string;
-  kodik_type: string;
-  link: string;
-  title: string;
-  title_orig?: string;
-  other_title?: string;
-  year?: number;
-  last_season: number;
-  last_episode: number;
-  episodes_count: number;
-  kinopoisk_id?: number;
-  imdb_id?: number;
-  shikimori_id?: number;
-  quality?: string;
-  camrip?: number;
-  lgbt?: number;
-  created_at: Date;
-  updated_at: Date;
-  description?: string;
-  anime_description?: string;
-  poster_url?: string;
-  anime_poster_url?: string;
-  premiere_world?: Date;
-  aried_at: Date;
-  released_at?: Date;
-  rating_mpaa: number;
-  minimal_age: number;
-  episodes_total: number;
-  episodes_aired: number;
-  imdb_rating: number | null;
-  imdb_votes: number | null;
-  shikimori_rating: number | null;
-  shikimori_votes: number | null;
-  next_episode_at: string | null;
-  all_status: string;
-  anime_kind: string;
-  duration: number | null;
-  anime_genres: AnimeGenreItem[];
-  anime_translations: AnimeTranslation[];
-  anime_screenshots: string[];
-  anime_persons: AnimePersonRole[];
-  anime_studios: AnimeStudioItem[];
-  blocked_countries: string[];
-}
-
-export interface Genre {
-  id: number;
-  name: string;
-  _count?: {
-    anime_genres?: number;
-  };
-}
-
-export interface PaginatedAnimeResponse {
-  data: AnimeItem[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    total_pages: number;
-    has_next: boolean;
-    has_prev: boolean;
-  };
-}
-
 export interface PaginationParams {
   page?: number;
   limit?: number;
-}
-
-export interface PaginationMeta {
-  page: number;
-  limit: number;
-  total: number;
-  total_pages: number;
-  has_next: boolean;
-  has_prev: boolean;
 }
 
 export interface PaginatedResponse<T> {
@@ -159,9 +67,6 @@ export interface PaginatedResponse<T> {
   pagination: PaginationMeta;
 }
 
-/**
- * Базовый тип для всех фильтров
- */
 export interface BaseFilters extends PaginationParams {
   search?: string;
   sort_by?: string;

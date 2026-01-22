@@ -7,17 +7,18 @@ import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/common/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/common/components/ui/field";
 import { Input } from "@/common/components/ui/input";
+import { useAuthControllerRegister } from "@/shared/api/generated/authentication/authentication";
+import type { RegisterDto } from "@/shared/api/generated/model";
 
-import { useRegister } from "../hooks/auth";
-import { registerSchema, type RegisterFormData } from "../types";
+import { registerSchema } from "../types";
 
 export const RegisterForm = () => {
   const navigate = useNavigate();
-  const registerMutation = useRegister();
+  const registerMutation = useAuthControllerRegister();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const form = useForm<RegisterFormData>({
+  const form = useForm<RegisterDto & { confirmPassword: string }>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       name: "",
@@ -27,14 +28,18 @@ export const RegisterForm = () => {
     },
   });
 
-  const onSubmit = async (data: RegisterFormData) => {
+  const onSubmit = async (data: RegisterDto & { confirmPassword: string }) => {
     try {
-      await registerMutation.mutateAsync({
-        name: data.name,
-        email: data.email,
-        password: data.password,
-      });
-      navigate({ to: "/" });
+      await registerMutation.mutateAsync(
+        {
+          data,
+        },
+        {
+          onSuccess: () => {
+            navigate({ to: "/" });
+          },
+        },
+      );
     } catch (error: unknown) {
       const errorMessage =
         error && typeof error === "object" && "message" in error
@@ -52,14 +57,14 @@ export const RegisterForm = () => {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto space-y-6">
-      <div className="text-center space-y-2">
+    <div className="mx-auto w-full max-w-md space-y-6">
+      <div className="space-y-2 text-center">
         <h1 className="text-2xl font-bold tracking-tight">Регистрация</h1>
       </div>
 
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         {form.formState.errors.root && (
-          <div className="bg-destructive/10 border border-destructive/20 text-destructive px-4 py-3 rounded-md text-sm">
+          <div className="bg-destructive/10 border-destructive/20 text-destructive rounded-md border px-4 py-3 text-sm">
             {form.formState.errors.root.message}
           </div>
         )}
@@ -114,7 +119,7 @@ export const RegisterForm = () => {
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                  className="absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
@@ -146,7 +151,7 @@ export const RegisterForm = () => {
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                  className="absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
                   {showConfirmPassword ? (

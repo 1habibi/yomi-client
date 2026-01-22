@@ -1,13 +1,10 @@
 import { createContext, useEffect, useState, type ReactNode } from "react";
 
 import { tokenStorage } from "@/common/utils/token-storage";
+import type { UserResponseDto } from "@/shared/api/generated/model";
 
 import { useProfile } from "../../modules/auth/hooks/auth";
-import type {
-  AuthContextType,
-  AuthState,
-  User,
-} from "../../modules/auth/types";
+import type { AuthContextType, AuthState } from "../../modules/auth/types";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -33,7 +30,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [user, isLoading, isError]);
 
-  const login = (user: User) => {
+  const login = (user: UserResponseDto) => {
     setAuth({ user, isAuthenticated: true, isLoading: false });
   };
 

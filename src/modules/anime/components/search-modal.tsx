@@ -105,11 +105,11 @@ export const AnimeSearchModal: React.FC<AnimeSearchModalProps> = ({
                 </div>
               )}
 
-              {searchError && (
+              {searchError ? (
                 <div className="text-destructive p-4 text-center text-sm">
-                  Ошибка поиска: {searchError.message}
+                  Ошибка поиска
                 </div>
-              )}
+              ) : null}
 
               {!isSearching && !searchError && query && !hasResults && (
                 <CommandEmpty>Ничего не найдено</CommandEmpty>
@@ -129,8 +129,8 @@ export const AnimeSearchModal: React.FC<AnimeSearchModalProps> = ({
                           <div className="flex gap-3">
                             <div className="flex-shrink-0">
                               <img
-                                src={anime.poster_url || anime.anime_poster_url}
-                                alt={anime.title}
+                                src={anime.poster_url ?? anime.anime_poster_url ?? undefined}
+                                alt={anime.title ?? undefined}
                                 className="h-24 w-16 rounded-md object-cover"
                                 loading="lazy"
                               />

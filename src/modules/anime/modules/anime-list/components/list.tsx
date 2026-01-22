@@ -1,8 +1,8 @@
 import React from "react";
 
 import { useAnimeGenres, type AnimeItem } from "../../..";
+import { useAnimePaginationList } from "../../../hooks/use-anime-pagination-list";
 import { useAnimeFilters } from "../hooks/use-anime-filters";
-import { useAnimePaginationList } from "../hooks/use-anime-pagination-list";
 
 import { AnimeCard } from "./card";
 import { FiltersAnime } from "./filters";

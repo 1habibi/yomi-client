@@ -1,30 +1,16 @@
 import { z } from "zod";
 
-export interface User {
-  id: string;
-  email: string;
-  name: string;
-  role: string;
-  created_at: Date;
-  updated_at: Date;
-  isEmailConfirmed: boolean;
-}
-
-export interface AuthResponse {
-  user: User;
-  accessToken: string;
-  sessionId: string;
-}
+import type { UserResponseDto } from "@/shared/api/generated/model";
 
 export interface AuthState {
-  user: User | null;
+  user: UserResponseDto | null;
   isAuthenticated: boolean;
   isLoading: boolean;
 }
 
 export interface AuthContextType {
   auth: AuthState;
-  login: (user: User) => void;
+  login: (user: UserResponseDto) => void;
   logout: () => void;
 }
 
@@ -62,5 +48,3 @@ export const loginSchema = z.object({
 
 export type RegisterFormData = z.infer<typeof registerSchema>;
 export type LoginFormData = z.infer<typeof loginSchema>;
-
-export type RegisterRequest = Omit<RegisterFormData, "confirmPassword">;

@@ -7,16 +7,20 @@ import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/common/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/common/components/ui/field";
 import { Input } from "@/common/components/ui/input";
+import { tokenStorage } from "@/common/utils/token-storage";
+import { useAuthControllerLogin } from "@/shared/api/generated/authentication/authentication";
+import type { LoginDto } from "@/shared/api/generated/model";
 
-import { useLogin } from "../hooks/auth";
-import { loginSchema, type LoginFormData } from "../types";
+import { useAuthContext } from "../hooks/use-auth-context";
+import { loginSchema } from "../types";
 
 export const LoginForm = () => {
   const navigate = useNavigate();
-  const loginMutation = useLogin();
+  const loginMutation = useAuthControllerLogin();
   const [showPassword, setShowPassword] = useState(false);
+  const { login } = useAuthContext();
 
-  const form = useForm<LoginFormData>({
+  const form = useForm<LoginDto>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
@@ -24,10 +28,18 @@ export const LoginForm = () => {
     },
   });
 
-  const onSubmit = async (data: LoginFormData) => {
+  const onSubmit = async (data: LoginDto) => {
     try {
-      await loginMutation.mutateAsync(data);
-      navigate({ to: "/" });
+      await loginMutation.mutateAsync(
+        { data },
+        {
+          onSuccess: (response) => {
+            tokenStorage.setAccessToken(response.accessToken);
+            login(response.user);
+            navigate({ to: "/" });
+          },
+        },
+      );
     } catch (error) {
       const errorMessage =
         error && typeof error === "object" && "message" in error

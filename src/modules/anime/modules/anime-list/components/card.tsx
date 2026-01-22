@@ -15,8 +15,8 @@ export const AnimeCard = React.memo<AnimeCardProps>(({ anime }) => {
     <Card className="group group overflow-hidden border-0 p-0 transition-all hover:shadow-lg">
       <div className="relative aspect-[3/4] overflow-hidden">
         <img
-          src={anime.poster_url || anime.anime_poster_url}
-          alt={anime.title}
+          src={anime.poster_url ?? anime.anime_poster_url ?? undefined}
+          alt={anime.title ?? undefined}
           className="h-full w-full object-cover transition-transform group-hover:scale-101"
           loading="lazy"
         />

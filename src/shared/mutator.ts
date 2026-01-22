@@ -1,6 +1,6 @@
 import type { ApiError } from "@/common/types";
 import { tokenStorage } from "@/common/utils/token-storage";
-import type { AuthResponse } from "@/modules/auth/types";
+import type { LoginResponseDto } from "@/shared/api/generated/model";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
@@ -110,7 +110,7 @@ async function tryRefreshToken(): Promise<boolean> {
 
   refreshTokenPromise = (async () => {
     try {
-      const response = await customInstance<AuthResponse>({
+      const response = await customInstance<LoginResponseDto>({
         url: "/auth/refresh",
         method: "POST",
         data: { userAgent: navigator.userAgent },

@@ -1,8 +1,11 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect } from "react";
 
-import { animeApi } from "../api";
-import { animeKeys } from "../constants/query-keys";
+import {
+  animeControllerGetAllAnime,
+  getAnimeControllerGetAllAnimeQueryKey,
+} from "@/shared/api/generated/anime/anime";
+
 import { useAnimeFilters } from "../modules/anime-list/hooks/use-anime-filters";
 
 import { useAnimeList } from "./use-anime-list";
@@ -21,10 +24,11 @@ export function useAnimePaginationList(options?: { enablePrefetch?: boolean }) {
   useEffect(() => {
     if (options?.enablePrefetch && pagination?.has_next) {
       const nextPage = page + 1;
+      const nextParams = { ...apiFilters, page: nextPage };
 
       queryClient.prefetchQuery({
-        queryKey: animeKeys.list(nextPage, apiFilters),
-        queryFn: () => animeApi.getAnime(nextPage, apiFilters),
+        queryKey: getAnimeControllerGetAllAnimeQueryKey(nextParams),
+        queryFn: () => animeControllerGetAllAnime(nextParams),
         staleTime: 5 * 60 * 1000,
       });
     }
@@ -63,7 +67,7 @@ export function useAnimePaginationList(options?: { enablePrefetch?: boolean }) {
   }, [pagination?.has_prev, page, goToPage]);
 
   const refresh = useCallback(() => {
-    queryClient.invalidateQueries({ queryKey: animeKeys.lists() });
+    queryClient.invalidateQueries({ queryKey: ["/anime"] });
   }, [queryClient]);
 
   return {
