@@ -7,7 +7,7 @@ const resetPasswordSearchSchema = z.object({
   token: z.string().optional(),
 });
 
-export const Route = createFileRoute("/reset-password")({
+export const Route = createFileRoute("/auth/reset-password")({
   component: RouteComponent,
   validateSearch: resetPasswordSearchSchema,
   head: () => ({
@@ -45,7 +45,7 @@ function RouteComponent() {
 
           <div className="text-center text-sm">
             <Link
-              to="/forgot-password"
+              to="/auth/forgot-password"
               className="text-primary underline-offset-4 hover:underline"
             >
               Запросить новую ссылку
@@ -63,7 +63,7 @@ function RouteComponent() {
 
         <div className="text-center text-sm">
           <Link
-            to="/login"
+            to="/auth/login"
             className="text-primary underline-offset-4 hover:underline"
           >
             Вернуться к входу

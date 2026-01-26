@@ -1,36 +1,36 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 
-import { LoginForm } from "@/modules/auth";
+import { RegisterForm } from "@/modules/auth";
 
-export const Route = createFileRoute("/login")({
-  component: LoginPage,
+export const Route = createFileRoute("/auth/register")({
+  component: RegisterPage,
   head: () => ({
     meta: [
       {
         name: "description",
-        content: "Вход в систему Yomi",
+        content: "Регистрация в системе Yomi",
       },
       {
-        title: "Вход - Yomi",
+        title: "Регистрация - Yomi",
       },
     ],
   }),
 });
 
-function LoginPage() {
+function RegisterPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <div className="w-full max-w-md space-y-8">
-        <LoginForm />
+        <RegisterForm />
 
         <div className="text-center space-y-4">
           <p className="text-sm text-muted-foreground">
-            Нет аккаунта?{" "}
+            Уже есть аккаунт?{" "}
             <Link
-              to="/register"
+              to="/auth/login"
               className="font-medium text-primary hover:underline"
             >
-              Зарегистрироваться
+              Войти
             </Link>
           </p>
         </div>

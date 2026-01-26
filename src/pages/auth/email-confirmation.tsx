@@ -9,12 +9,12 @@ import { useEffect, useState } from "react";
 import { Button } from "@/common/components/ui/button";
 import { authControllerConfirmEmail } from "@/shared/api/generated/authentication/authentication";
 
-export const Route = createFileRoute("/email-confirmation")({
+export const Route = createFileRoute("/auth/email-confirmation")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const search = useSearch({ from: "/email-confirmation" });
+  const search = useSearch({ from: "/auth/email-confirmation" });
   const navigate = useNavigate();
   const [status, setStatus] = useState<"loading" | "success" | "error">(
     "loading",
@@ -47,7 +47,7 @@ function RouteComponent() {
         )}
         <p className="text-lg">{message}</p>
         {status === "success" && (
-          <Button onClick={() => navigate({ to: "/login" })}>
+          <Button onClick={() => navigate({ to: "/auth/login" })}>
             Перейти к входу
           </Button>
         )}

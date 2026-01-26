@@ -65,10 +65,10 @@ function HomePage() {
           </p>
           <div className="space-x-2">
             <Button asChild>
-              <Link to="/login">Войти</Link>
+              <Link to="/auth/login">Войти</Link>
             </Button>
             <Button variant="outline" asChild>
-              <Link to="/register">Регистрация</Link>
+              <Link to="/auth/register">Регистрация</Link>
             </Button>
           </div>
         </div>

@@ -98,11 +98,11 @@ export function Header() {
             ) : (
               <>
                 <Button asChild variant="default">
-                  <Link to="/login">Вход</Link>
+                  <Link to="/auth/login">Вход</Link>
                 </Button>
 
                 <Button asChild variant="secondary">
-                  <Link to="/register">Регистрация</Link>
+                  <Link to="/auth/register">Регистрация</Link>
                 </Button>
               </>
             )}

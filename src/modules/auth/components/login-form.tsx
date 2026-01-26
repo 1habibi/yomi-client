@@ -118,7 +118,7 @@ export const LoginForm = () => {
 
         <div className="text-right">
           <Link
-            to="/forgot-password"
+            to="/auth/forgot-password"
             className="text-primary text-sm underline-offset-4 hover:underline"
           >
             Забыли пароль?

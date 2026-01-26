@@ -40,7 +40,7 @@ export const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
       });
       setSuccess(true);
       setTimeout(() => {
-        navigate({ to: "/login" });
+        navigate({ to: "/auth/login" });
       }, 3000);
     } catch (error) {
       const errorMessage =

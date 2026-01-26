@@ -2,7 +2,7 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 
 import { ForgotPasswordForm } from "@/modules/auth/components/forgot-password-form";
 
-export const Route = createFileRoute("/forgot-password")({
+export const Route = createFileRoute("/auth/forgot-password")({
   component: RouteComponent,
   head: () => ({
     meta: [
@@ -25,7 +25,7 @@ function RouteComponent() {
 
         <div className="text-center text-sm">
           <Link
-            to="/login"
+            to="/auth/login"
             className="text-primary underline-offset-4 hover:underline"
           >
             Вернуться к входу

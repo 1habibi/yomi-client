@@ -9,43 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from "./pages/__root"
-import { Route as ResetPasswordRouteImport } from "./pages/reset-password"
-import { Route as RegisterRouteImport } from "./pages/register"
-import { Route as LoginRouteImport } from "./pages/login"
-import { Route as ForgotPasswordRouteImport } from "./pages/forgot-password"
-import { Route as EmailConfirmationRouteImport } from "./pages/email-confirmation"
 import { Route as AnimeRouteRouteImport } from "./pages/anime/route"
 import { Route as AuthenticatedRouteRouteImport } from "./pages/_authenticated/route"
 import { Route as IndexRouteImport } from "./pages/index"
 import { Route as AnimeIndexRouteImport } from "./pages/anime/index"
+import { Route as AuthResetPasswordRouteImport } from "./pages/auth/reset-password"
+import { Route as AuthRegisterRouteImport } from "./pages/auth/register"
+import { Route as AuthLoginRouteImport } from "./pages/auth/login"
+import { Route as AuthForgotPasswordRouteImport } from "./pages/auth/forgot-password"
+import { Route as AuthEmailConfirmationRouteImport } from "./pages/auth/email-confirmation"
 import { Route as AnimeIdRouteImport } from "./pages/anime/$id"
 import { Route as AuthenticatedProfileRouteImport } from "./pages/_authenticated/profile"
 
-const ResetPasswordRoute = ResetPasswordRouteImport.update({
-  id: "/reset-password",
-  path: "/reset-password",
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RegisterRoute = RegisterRouteImport.update({
-  id: "/register",
-  path: "/register",
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: "/login",
-  path: "/login",
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
-  id: "/forgot-password",
-  path: "/forgot-password",
-  getParentRoute: () => rootRouteImport,
-} as any)
-const EmailConfirmationRoute = EmailConfirmationRouteImport.update({
-  id: "/email-confirmation",
-  path: "/email-confirmation",
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AnimeRouteRoute = AnimeRouteRouteImport.update({
   id: "/anime",
   path: "/anime",
@@ -65,6 +40,31 @@ const AnimeIndexRoute = AnimeIndexRouteImport.update({
   path: "/",
   getParentRoute: () => AnimeRouteRoute,
 } as any)
+const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
+  id: "/auth/reset-password",
+  path: "/auth/reset-password",
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRegisterRoute = AuthRegisterRouteImport.update({
+  id: "/auth/register",
+  path: "/auth/register",
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthLoginRoute = AuthLoginRouteImport.update({
+  id: "/auth/login",
+  path: "/auth/login",
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
+  id: "/auth/forgot-password",
+  path: "/auth/forgot-password",
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthEmailConfirmationRoute = AuthEmailConfirmationRouteImport.update({
+  id: "/auth/email-confirmation",
+  path: "/auth/email-confirmation",
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AnimeIdRoute = AnimeIdRouteImport.update({
   id: "/$id",
   path: "/$id",
@@ -79,24 +79,24 @@ const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute
   "/anime": typeof AnimeRouteRouteWithChildren
-  "/email-confirmation": typeof EmailConfirmationRoute
-  "/forgot-password": typeof ForgotPasswordRoute
-  "/login": typeof LoginRoute
-  "/register": typeof RegisterRoute
-  "/reset-password": typeof ResetPasswordRoute
   "/profile": typeof AuthenticatedProfileRoute
   "/anime/$id": typeof AnimeIdRoute
+  "/auth/email-confirmation": typeof AuthEmailConfirmationRoute
+  "/auth/forgot-password": typeof AuthForgotPasswordRoute
+  "/auth/login": typeof AuthLoginRoute
+  "/auth/register": typeof AuthRegisterRoute
+  "/auth/reset-password": typeof AuthResetPasswordRoute
   "/anime/": typeof AnimeIndexRoute
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute
-  "/email-confirmation": typeof EmailConfirmationRoute
-  "/forgot-password": typeof ForgotPasswordRoute
-  "/login": typeof LoginRoute
-  "/register": typeof RegisterRoute
-  "/reset-password": typeof ResetPasswordRoute
   "/profile": typeof AuthenticatedProfileRoute
   "/anime/$id": typeof AnimeIdRoute
+  "/auth/email-confirmation": typeof AuthEmailConfirmationRoute
+  "/auth/forgot-password": typeof AuthForgotPasswordRoute
+  "/auth/login": typeof AuthLoginRoute
+  "/auth/register": typeof AuthRegisterRoute
+  "/auth/reset-password": typeof AuthResetPasswordRoute
   "/anime": typeof AnimeIndexRoute
 }
 export interface FileRoutesById {
@@ -104,13 +104,13 @@ export interface FileRoutesById {
   "/": typeof IndexRoute
   "/_authenticated": typeof AuthenticatedRouteRouteWithChildren
   "/anime": typeof AnimeRouteRouteWithChildren
-  "/email-confirmation": typeof EmailConfirmationRoute
-  "/forgot-password": typeof ForgotPasswordRoute
-  "/login": typeof LoginRoute
-  "/register": typeof RegisterRoute
-  "/reset-password": typeof ResetPasswordRoute
   "/_authenticated/profile": typeof AuthenticatedProfileRoute
   "/anime/$id": typeof AnimeIdRoute
+  "/auth/email-confirmation": typeof AuthEmailConfirmationRoute
+  "/auth/forgot-password": typeof AuthForgotPasswordRoute
+  "/auth/login": typeof AuthLoginRoute
+  "/auth/register": typeof AuthRegisterRoute
+  "/auth/reset-password": typeof AuthResetPasswordRoute
   "/anime/": typeof AnimeIndexRoute
 }
 export interface FileRouteTypes {
@@ -118,37 +118,37 @@ export interface FileRouteTypes {
   fullPaths:
     | "/"
     | "/anime"
-    | "/email-confirmation"
-    | "/forgot-password"
-    | "/login"
-    | "/register"
-    | "/reset-password"
     | "/profile"
     | "/anime/$id"
+    | "/auth/email-confirmation"
+    | "/auth/forgot-password"
+    | "/auth/login"
+    | "/auth/register"
+    | "/auth/reset-password"
     | "/anime/"
   fileRoutesByTo: FileRoutesByTo
   to:
     | "/"
-    | "/email-confirmation"
-    | "/forgot-password"
-    | "/login"
-    | "/register"
-    | "/reset-password"
     | "/profile"
     | "/anime/$id"
+    | "/auth/email-confirmation"
+    | "/auth/forgot-password"
+    | "/auth/login"
+    | "/auth/register"
+    | "/auth/reset-password"
     | "/anime"
   id:
     | "__root__"
     | "/"
     | "/_authenticated"
     | "/anime"
-    | "/email-confirmation"
-    | "/forgot-password"
-    | "/login"
-    | "/register"
-    | "/reset-password"
     | "/_authenticated/profile"
     | "/anime/$id"
+    | "/auth/email-confirmation"
+    | "/auth/forgot-password"
+    | "/auth/login"
+    | "/auth/register"
+    | "/auth/reset-password"
     | "/anime/"
   fileRoutesById: FileRoutesById
 }
@@ -156,50 +156,15 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AnimeRouteRoute: typeof AnimeRouteRouteWithChildren
-  EmailConfirmationRoute: typeof EmailConfirmationRoute
-  ForgotPasswordRoute: typeof ForgotPasswordRoute
-  LoginRoute: typeof LoginRoute
-  RegisterRoute: typeof RegisterRoute
-  ResetPasswordRoute: typeof ResetPasswordRoute
+  AuthEmailConfirmationRoute: typeof AuthEmailConfirmationRoute
+  AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
+  AuthLoginRoute: typeof AuthLoginRoute
+  AuthRegisterRoute: typeof AuthRegisterRoute
+  AuthResetPasswordRoute: typeof AuthResetPasswordRoute
 }
 
 declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    "/reset-password": {
-      id: "/reset-password"
-      path: "/reset-password"
-      fullPath: "/reset-password"
-      preLoaderRoute: typeof ResetPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    "/register": {
-      id: "/register"
-      path: "/register"
-      fullPath: "/register"
-      preLoaderRoute: typeof RegisterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    "/login": {
-      id: "/login"
-      path: "/login"
-      fullPath: "/login"
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    "/forgot-password": {
-      id: "/forgot-password"
-      path: "/forgot-password"
-      fullPath: "/forgot-password"
-      preLoaderRoute: typeof ForgotPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    "/email-confirmation": {
-      id: "/email-confirmation"
-      path: "/email-confirmation"
-      fullPath: "/email-confirmation"
-      preLoaderRoute: typeof EmailConfirmationRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     "/anime": {
       id: "/anime"
       path: "/anime"
@@ -227,6 +192,41 @@ declare module "@tanstack/react-router" {
       fullPath: "/anime/"
       preLoaderRoute: typeof AnimeIndexRouteImport
       parentRoute: typeof AnimeRouteRoute
+    }
+    "/auth/reset-password": {
+      id: "/auth/reset-password"
+      path: "/auth/reset-password"
+      fullPath: "/auth/reset-password"
+      preLoaderRoute: typeof AuthResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    "/auth/register": {
+      id: "/auth/register"
+      path: "/auth/register"
+      fullPath: "/auth/register"
+      preLoaderRoute: typeof AuthRegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    "/auth/login": {
+      id: "/auth/login"
+      path: "/auth/login"
+      fullPath: "/auth/login"
+      preLoaderRoute: typeof AuthLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    "/auth/forgot-password": {
+      id: "/auth/forgot-password"
+      path: "/auth/forgot-password"
+      fullPath: "/auth/forgot-password"
+      preLoaderRoute: typeof AuthForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    "/auth/email-confirmation": {
+      id: "/auth/email-confirmation"
+      path: "/auth/email-confirmation"
+      fullPath: "/auth/email-confirmation"
+      preLoaderRoute: typeof AuthEmailConfirmationRouteImport
+      parentRoute: typeof rootRouteImport
     }
     "/anime/$id": {
       id: "/anime/$id"
@@ -274,11 +274,11 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AnimeRouteRoute: AnimeRouteRouteWithChildren,
-  EmailConfirmationRoute: EmailConfirmationRoute,
-  ForgotPasswordRoute: ForgotPasswordRoute,
-  LoginRoute: LoginRoute,
-  RegisterRoute: RegisterRoute,
-  ResetPasswordRoute: ResetPasswordRoute,
+  AuthEmailConfirmationRoute: AuthEmailConfirmationRoute,
+  AuthForgotPasswordRoute: AuthForgotPasswordRoute,
+  AuthLoginRoute: AuthLoginRoute,
+  AuthRegisterRoute: AuthRegisterRoute,
+  AuthResetPasswordRoute: AuthResetPasswordRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
