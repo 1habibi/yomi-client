@@ -9,14 +9,23 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from "./pages/__root"
+import { Route as ResetPasswordRouteImport } from "./pages/reset-password"
 import { Route as RegisterRouteImport } from "./pages/register"
 import { Route as LoginRouteImport } from "./pages/login"
+import { Route as ForgotPasswordRouteImport } from "./pages/forgot-password"
 import { Route as EmailConfirmationRouteImport } from "./pages/email-confirmation"
-import { Route as AnimeRouteImport } from "./pages/anime"
+import { Route as AnimeRouteRouteImport } from "./pages/anime/route"
 import { Route as AuthenticatedRouteRouteImport } from "./pages/_authenticated/route"
 import { Route as IndexRouteImport } from "./pages/index"
+import { Route as AnimeIndexRouteImport } from "./pages/anime/index"
+import { Route as AnimeIdRouteImport } from "./pages/anime/$id"
 import { Route as AuthenticatedProfileRouteImport } from "./pages/_authenticated/profile"
 
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: "/reset-password",
+  path: "/reset-password",
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RegisterRoute = RegisterRouteImport.update({
   id: "/register",
   path: "/register",
@@ -27,12 +36,17 @@ const LoginRoute = LoginRouteImport.update({
   path: "/login",
   getParentRoute: () => rootRouteImport,
 } as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: "/forgot-password",
+  path: "/forgot-password",
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EmailConfirmationRoute = EmailConfirmationRouteImport.update({
   id: "/email-confirmation",
   path: "/email-confirmation",
   getParentRoute: () => rootRouteImport,
 } as any)
-const AnimeRoute = AnimeRouteImport.update({
+const AnimeRouteRoute = AnimeRouteRouteImport.update({
   id: "/anime",
   path: "/anime",
   getParentRoute: () => rootRouteImport,
@@ -46,6 +60,16 @@ const IndexRoute = IndexRouteImport.update({
   path: "/",
   getParentRoute: () => rootRouteImport,
 } as any)
+const AnimeIndexRoute = AnimeIndexRouteImport.update({
+  id: "/",
+  path: "/",
+  getParentRoute: () => AnimeRouteRoute,
+} as any)
+const AnimeIdRoute = AnimeIdRouteImport.update({
+  id: "/$id",
+  path: "/$id",
+  getParentRoute: () => AnimeRouteRoute,
+} as any)
 const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   id: "/profile",
   path: "/profile",
@@ -54,29 +78,40 @@ const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
 
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute
-  "/anime": typeof AnimeRoute
+  "/anime": typeof AnimeRouteRouteWithChildren
   "/email-confirmation": typeof EmailConfirmationRoute
+  "/forgot-password": typeof ForgotPasswordRoute
   "/login": typeof LoginRoute
   "/register": typeof RegisterRoute
+  "/reset-password": typeof ResetPasswordRoute
   "/profile": typeof AuthenticatedProfileRoute
+  "/anime/$id": typeof AnimeIdRoute
+  "/anime/": typeof AnimeIndexRoute
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute
-  "/anime": typeof AnimeRoute
   "/email-confirmation": typeof EmailConfirmationRoute
+  "/forgot-password": typeof ForgotPasswordRoute
   "/login": typeof LoginRoute
   "/register": typeof RegisterRoute
+  "/reset-password": typeof ResetPasswordRoute
   "/profile": typeof AuthenticatedProfileRoute
+  "/anime/$id": typeof AnimeIdRoute
+  "/anime": typeof AnimeIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   "/": typeof IndexRoute
   "/_authenticated": typeof AuthenticatedRouteRouteWithChildren
-  "/anime": typeof AnimeRoute
+  "/anime": typeof AnimeRouteRouteWithChildren
   "/email-confirmation": typeof EmailConfirmationRoute
+  "/forgot-password": typeof ForgotPasswordRoute
   "/login": typeof LoginRoute
   "/register": typeof RegisterRoute
+  "/reset-password": typeof ResetPasswordRoute
   "/_authenticated/profile": typeof AuthenticatedProfileRoute
+  "/anime/$id": typeof AnimeIdRoute
+  "/anime/": typeof AnimeIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -84,39 +119,59 @@ export interface FileRouteTypes {
     | "/"
     | "/anime"
     | "/email-confirmation"
+    | "/forgot-password"
     | "/login"
     | "/register"
+    | "/reset-password"
     | "/profile"
+    | "/anime/$id"
+    | "/anime/"
   fileRoutesByTo: FileRoutesByTo
   to:
     | "/"
-    | "/anime"
     | "/email-confirmation"
+    | "/forgot-password"
     | "/login"
     | "/register"
+    | "/reset-password"
     | "/profile"
+    | "/anime/$id"
+    | "/anime"
   id:
     | "__root__"
     | "/"
     | "/_authenticated"
     | "/anime"
     | "/email-confirmation"
+    | "/forgot-password"
     | "/login"
     | "/register"
+    | "/reset-password"
     | "/_authenticated/profile"
+    | "/anime/$id"
+    | "/anime/"
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
-  AnimeRoute: typeof AnimeRoute
+  AnimeRouteRoute: typeof AnimeRouteRouteWithChildren
   EmailConfirmationRoute: typeof EmailConfirmationRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
 declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
+    "/reset-password": {
+      id: "/reset-password"
+      path: "/reset-password"
+      fullPath: "/reset-password"
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     "/register": {
       id: "/register"
       path: "/register"
@@ -131,6 +186,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    "/forgot-password": {
+      id: "/forgot-password"
+      path: "/forgot-password"
+      fullPath: "/forgot-password"
+      preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     "/email-confirmation": {
       id: "/email-confirmation"
       path: "/email-confirmation"
@@ -142,7 +204,7 @@ declare module "@tanstack/react-router" {
       id: "/anime"
       path: "/anime"
       fullPath: "/anime"
-      preLoaderRoute: typeof AnimeRouteImport
+      preLoaderRoute: typeof AnimeRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     "/_authenticated": {
@@ -158,6 +220,20 @@ declare module "@tanstack/react-router" {
       fullPath: "/"
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    "/anime/": {
+      id: "/anime/"
+      path: "/"
+      fullPath: "/anime/"
+      preLoaderRoute: typeof AnimeIndexRouteImport
+      parentRoute: typeof AnimeRouteRoute
+    }
+    "/anime/$id": {
+      id: "/anime/$id"
+      path: "/$id"
+      fullPath: "/anime/$id"
+      preLoaderRoute: typeof AnimeIdRouteImport
+      parentRoute: typeof AnimeRouteRoute
     }
     "/_authenticated/profile": {
       id: "/_authenticated/profile"
@@ -180,13 +256,29 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface AnimeRouteRouteChildren {
+  AnimeIdRoute: typeof AnimeIdRoute
+  AnimeIndexRoute: typeof AnimeIndexRoute
+}
+
+const AnimeRouteRouteChildren: AnimeRouteRouteChildren = {
+  AnimeIdRoute: AnimeIdRoute,
+  AnimeIndexRoute: AnimeIndexRoute,
+}
+
+const AnimeRouteRouteWithChildren = AnimeRouteRoute._addFileChildren(
+  AnimeRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
-  AnimeRoute: AnimeRoute,
+  AnimeRouteRoute: AnimeRouteRouteWithChildren,
   EmailConfirmationRoute: EmailConfirmationRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

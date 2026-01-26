@@ -1,13 +1,25 @@
+export { ForgotPasswordForm } from "./components/forgot-password-form";
 export { LoginForm } from "./components/login-form";
 export { RegisterForm } from "./components/register-form";
+export { ResetPasswordForm } from "./components/reset-password-form";
 export {
-  useCurrentUser,
   useIsAuthenticated,
   useLogout,
   useProfile,
 } from "./hooks/auth";
 export { useAuthContext } from "./hooks/use-auth-context";
 
-export type { AuthContextType, LoginFormData, RegisterFormData } from "./types";
+export type {
+  AuthContextType,
+  ForgotPasswordFormData,
+  LoginFormData,
+  RegisterFormData,
+  ResetPasswordFormData,
+} from "./types";
 
-export { loginSchema, registerSchema } from "./types";
+export {
+  forgotPasswordSchema,
+  loginSchema,
+  registerSchema,
+  resetPasswordSchema,
+} from "./types";

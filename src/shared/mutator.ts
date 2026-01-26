@@ -32,11 +32,19 @@ export const customInstance = async <T>({
     finalUrl += `?${searchParams.toString()}`;
   }
 
+  const isFormData = data instanceof FormData;
+
+  const finalHeaders = isFormData && headers
+    ? Object.fromEntries(
+        Object.entries(headers).filter(([key]) => key.toLowerCase() !== 'content-type')
+      )
+    : headers;
+
   const requestConfig: RequestInit = {
     method,
     headers: {
-      "Content-Type": "application/json",
-      ...headers,
+      ...(isFormData ? {} : { "Content-Type": "application/json" }),
+      ...finalHeaders,
     },
     credentials: "include",
     ...config,
@@ -51,7 +59,7 @@ export const customInstance = async <T>({
   }
 
   if (data && method !== "GET") {
-    requestConfig.body = JSON.stringify(data);
+    requestConfig.body = isFormData ? data : JSON.stringify(data);
   }
 
   try {
@@ -70,6 +78,7 @@ export const customInstance = async <T>({
             ...requestConfig.headers,
             Authorization: `Bearer ${newToken}`,
           };
+
           const retryResponse = await fetch(finalUrl, requestConfig);
           if (retryResponse.ok) {
             return await retryResponse.json();

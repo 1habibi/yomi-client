@@ -89,7 +89,6 @@ export const FiltersAnime = React.memo<FiltersAnimeProps>(
         </CardHeader>
 
         <CardContent className="grid gap-6">
-          {/* Верхняя панель: Поиск и Сортировка */}
           <div className="flex flex-col gap-4 md:flex-row">
             <div className="relative flex-1">
               <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
@@ -104,7 +103,6 @@ export const FiltersAnime = React.memo<FiltersAnimeProps>(
               />
             </div>
 
-            {/* Сортировка через map */}
             <Select
               value={currentSortValue}
               onValueChange={handleSortChange}
@@ -126,7 +124,6 @@ export const FiltersAnime = React.memo<FiltersAnimeProps>(
           <Separator />
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {/* Жанр (почти без изменений, можно вынести маппинг) */}
             <div className="space-y-2">
               <Label className="text-muted-foreground text-xs font-semibold">
                 ЖАНР
@@ -152,7 +149,6 @@ export const FiltersAnime = React.memo<FiltersAnimeProps>(
               </Select>
             </div>
 
-            {/* Статус (через константы) */}
             <div className="space-y-2">
               <Label className="text-muted-foreground text-xs font-semibold">
                 СТАТУС
@@ -180,8 +176,6 @@ export const FiltersAnime = React.memo<FiltersAnimeProps>(
                 </SelectContent>
               </Select>
             </div>
-
-            {/* Год Выхода (Используем новый компонент) */}
             <div className="space-y-2">
               <Label className="text-muted-foreground flex items-center gap-1 text-xs font-semibold">
                 <Calendar className="h-3 w-3" /> ГОД ВЫХОДА
@@ -198,7 +192,6 @@ export const FiltersAnime = React.memo<FiltersAnimeProps>(
               />
             </div>
 
-            {/* Рейтинг (Используем новый компонент) */}
             <div className="space-y-2">
               <Label className="text-muted-foreground flex items-center gap-1 text-xs font-semibold">
                 <Star className="h-3 w-3" /> РЕЙТИНГ (0-10)
@@ -217,7 +210,6 @@ export const FiltersAnime = React.memo<FiltersAnimeProps>(
             </div>
           </div>
 
-          {/* Индикаторы активных фильтров */}
           {hasActiveFilters && (
             <div className="animate-in fade-in zoom-in flex flex-wrap gap-2 pt-2 duration-300">
               {values.genre && (

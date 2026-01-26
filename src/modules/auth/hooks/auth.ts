@@ -54,8 +54,3 @@ export function useIsAuthenticated() {
     user,
   };
 }
-
-export function useCurrentUser() {
-  const { data: user } = useProfile();
-  return user;
-}

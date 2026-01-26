@@ -1,5 +1,5 @@
-import type { AnimeControllerGetAllAnimeParams } from "@/shared/api/generated/model";
 import { useAnimeControllerGetAllAnime } from "@/shared/api/generated/anime/anime";
+import type { AnimeControllerGetAllAnimeParams } from "@/shared/api/generated/model";
 
 import { animeFiltersSchema, type AnimeFilters } from "../types";
 

@@ -12,7 +12,7 @@ function AnimeCatalogPage() {
   );
 }
 
-export const Route = createFileRoute("/anime")({
+export const Route = createFileRoute("/anime/")({
   validateSearch: animeFiltersSchema,
   search: {
     middlewares: [stripSearchParams(DEFAULT_SEARCH_PARAMS)],

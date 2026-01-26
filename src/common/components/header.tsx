@@ -3,6 +3,7 @@ import { Link, useLocation } from "@tanstack/react-router";
 import { useTheme } from "@/app/providers/theme-provider";
 import Logo from "@/common/components/Logo/Logo";
 import { ModeToggle } from "@/common/components/mode-toggle";
+import { Avatar, AvatarFallback, AvatarImage } from "@/common/components/ui/avatar";
 import { Button } from "@/common/components/ui/button";
 import {
   DropdownMenu,
@@ -67,9 +68,23 @@ export function Header() {
             {auth.isAuthenticated ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <p className="hover:bg-accent hover:text-accent-foreground cursor-pointer rounded-lg px-3 py-2 text-sm transition-colors select-none focus:ring-0 focus:outline-none">
-                    {auth.user?.name}
-                  </p>
+                  <button className="hover:bg-accent flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 transition-colors select-none focus:ring-0 focus:outline-none">
+                    <Avatar className="size-8">
+                      <AvatarImage
+                        src={auth.user?.avatarUrl || undefined}
+                        alt={auth.user?.name}
+                      />
+                      <AvatarFallback>
+                        {auth.user?.name
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")
+                          .toUpperCase()
+                          .slice(0, 2)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="text-sm">{auth.user?.name}</span>
+                  </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <DropdownMenuItem asChild>
