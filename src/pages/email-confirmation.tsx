@@ -7,7 +7,7 @@ import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/common/components/ui/button";
-import { authApi } from "@/modules/auth";
+import { authControllerConfirmEmail } from "@/shared/api/generated/authentication/authentication";
 
 export const Route = createFileRoute("/email-confirmation")({
   component: RouteComponent,
@@ -26,7 +26,7 @@ function RouteComponent() {
       try {
         const token = search.token as string;
         if (!token) throw new Error("Токен подтверждения не найден");
-        await authApi.confirmEmail(token);
+        await authControllerConfirmEmail({ token });
         setStatus("success");
         setMessage("Email успешно подтвержден!");
       } catch (error) {

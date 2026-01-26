@@ -1,8 +1,10 @@
 import React from "react";
 
-import { useAnimeGenres, type AnimeItem } from "../../..";
+import { useAnimeControllerGetGenres } from "@/shared/api/generated/anime/anime";
+
+import { type AnimeItem } from "../../..";
+import { useAnimePaginationList } from "../../../hooks/use-anime-pagination-list";
 import { useAnimeFilters } from "../hooks/use-anime-filters";
-import { useAnimePaginationList } from "../hooks/use-anime-pagination-list";
 
 import { AnimeCard } from "./card";
 import { FiltersAnime } from "./filters";
@@ -36,7 +38,12 @@ export const AnimeList: React.FC = () => {
   const { filters, updateFilters, resetFilters, hasActiveFilters } =
     useAnimeFilters();
 
-  const { data: genres } = useAnimeGenres();
+  const { data: genres } = useAnimeControllerGetGenres({
+    query: {
+      staleTime: 30 * 60 * 1000,
+      gcTime: 60 * 60 * 1000,
+    },
+  });
 
   if (error) {
     return <ErrorState error={error} />;
@@ -56,8 +63,6 @@ export const AnimeList: React.FC = () => {
         onReset={resetFilters}
         isPending={loading}
       />
-
-      {/* Контент */}
       <div className="min-h-[400px]">
         {loading && anime.length === 0 ? (
           <LoadingState />

@@ -1,77 +1,81 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link, useNavigate } from "@tanstack/react-router";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { Button } from "@/common/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/common/components/ui/field";
 import { Input } from "@/common/components/ui/input";
-import { tokenStorage } from "@/common/utils/token-storage";
-import { useAuthControllerLogin } from "@/shared/api/generated/authentication/authentication";
-import type { LoginDto } from "@/shared/api/generated/model";
+import { changeEmailSchema, type ChangeEmailFormData } from "@/modules/auth/types";
+import { useUsersControllerChangeEmail } from "@/shared/api/generated/users/users";
 
-import { useAuthContext } from "../hooks/use-auth-context";
-import { loginSchema } from "../types";
-
-export const LoginForm = () => {
-  const navigate = useNavigate();
-  const loginMutation = useAuthControllerLogin();
+export const ChangeEmailForm = () => {
+  const queryClient = useQueryClient();
+  const changeEmail = useUsersControllerChangeEmail({
+    mutation: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["auth", "profile"] });
+      },
+    },
+  });
   const [showPassword, setShowPassword] = useState(false);
-  const { login } = useAuthContext();
 
-  const form = useForm<LoginDto>({
-    resolver: zodResolver(loginSchema),
+  const form = useForm<ChangeEmailFormData>({
+    resolver: zodResolver(changeEmailSchema),
     defaultValues: {
-      email: "",
+      newEmail: "",
       password: "",
     },
   });
 
-  const onSubmit = async (data: LoginDto) => {
+  const onSubmit = async (data: ChangeEmailFormData) => {
     try {
-      await loginMutation.mutateAsync(
-        { data },
-        {
-          onSuccess: (response) => {
-            tokenStorage.setAccessToken(response.accessToken);
-            login(response.user);
-            navigate({ to: "/" });
-          },
-        },
-      );
+      await changeEmail.mutateAsync({ data });
+
+      form.reset();
+      form.setError("root", {
+        type: "success",
+        message:
+          "Email успешно изменен. Проверьте новый email для подтверждения.",
+      });
     } catch (error) {
       const errorMessage =
         error && typeof error === "object" && "message" in error
           ? (error as { message: string }).message
-          : "Произошла ошибка при входе";
+          : "Произошла ошибка при смене email";
       form.setError("root", { message: errorMessage });
     }
   };
 
   return (
-    <div className="mx-auto w-full max-w-md space-y-6">
-      <div className="space-y-2 text-center">
-        <h1 className="text-2xl font-bold tracking-tight">Вход</h1>
-      </div>
+    <div className="rounded-lg border p-6">
+      <h2 className="mb-4 text-xl font-semibold">Смена Email</h2>
 
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         {form.formState.errors.root && (
-          <div className="bg-destructive/10 border-destructive/20 text-destructive rounded-md border px-4 py-3 text-sm">
+          <div
+            className={`rounded-md border px-4 py-3 text-sm ${
+              form.formState.errors.root.type === "success"
+                ? "bg-green-50 border-green-200 text-green-800 dark:bg-green-950 dark:border-green-800 dark:text-green-200"
+                : "bg-destructive/10 border-destructive/20 text-destructive"
+            }`}
+          >
             {form.formState.errors.root.message}
           </div>
         )}
 
         <Controller
           control={form.control}
-          name="email"
+          name="newEmail"
           render={({ field, fieldState }) => (
             <Field
               className="flex flex-col gap-1.5"
               data-invalid={!!fieldState.error}
             >
-              <FieldLabel>Email</FieldLabel>
+              <FieldLabel>Новый Email</FieldLabel>
               <Input
+                type="email"
                 placeholder="example@email.com"
                 aria-invalid={!!fieldState.error}
                 {...field}
@@ -89,7 +93,7 @@ export const LoginForm = () => {
               className="flex flex-col gap-1.5"
               data-invalid={!!fieldState.error}
             >
-              <FieldLabel>Пароль</FieldLabel>
+              <FieldLabel>Пароль для подтверждения</FieldLabel>
               <div className="relative">
                 <Input
                   type={showPassword ? "text" : "password"}
@@ -116,27 +120,18 @@ export const LoginForm = () => {
           )}
         />
 
-        <div className="text-right">
-          <Link
-            to="/forgot-password"
-            className="text-primary text-sm underline-offset-4 hover:underline"
-          >
-            Забыли пароль?
-          </Link>
-        </div>
-
         <Button
           type="submit"
           className="w-full"
-          disabled={form.formState.isSubmitting || loginMutation.isPending}
+          disabled={form.formState.isSubmitting || changeEmail.isPending}
         >
-          {form.formState.isSubmitting || loginMutation.isPending ? (
+          {form.formState.isSubmitting || changeEmail.isPending ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Вход...
+              Изменение...
             </>
           ) : (
-            "Войти"
+            "Изменить Email"
           )}
         </Button>
       </form>

@@ -7,59 +7,79 @@ import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/common/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/common/components/ui/field";
 import { Input } from "@/common/components/ui/input";
-import { useAuthControllerRegister } from "@/shared/api/generated/authentication/authentication";
-import type { RegisterDto } from "@/shared/api/generated/model";
+import { useAuthControllerResetPassword } from "@/shared/api/generated/authentication/authentication";
 
-import { registerSchema } from "../types";
+import { resetPasswordSchema, type ResetPasswordFormData } from "../types";
 
-export const RegisterForm = () => {
+interface ResetPasswordFormProps {
+  token: string;
+}
+
+export const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
   const navigate = useNavigate();
-  const registerMutation = useAuthControllerRegister();
+  const resetPasswordMutation = useAuthControllerResetPassword();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [success, setSuccess] = useState(false);
 
-  const form = useForm<RegisterDto & { confirmPassword: string }>({
-    resolver: zodResolver(registerSchema),
+  const form = useForm<ResetPasswordFormData>({
+    resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      password: "",
+      newPassword: "",
       confirmPassword: "",
     },
   });
 
-  const onSubmit = async (data: RegisterDto & { confirmPassword: string }) => {
+  const onSubmit = async (data: ResetPasswordFormData) => {
     try {
-      await registerMutation.mutateAsync(
-        {
-          data,
+      await resetPasswordMutation.mutateAsync({
+        data: {
+          token,
+          newPassword: data.newPassword,
         },
-        {
-          onSuccess: () => {
-            navigate({ to: "/" });
-          },
-        },
-      );
-    } catch (error: unknown) {
+      });
+      setSuccess(true);
+      setTimeout(() => {
+        navigate({ to: "/login" });
+      }, 3000);
+    } catch (error) {
       const errorMessage =
         error && typeof error === "object" && "message" in error
           ? (error as { message: string }).message
-          : "Произошла ошибка при регистрации";
-
-      if (errorMessage.includes("email")) {
-        form.setError("email", {
-          message: "Пользователь с таким email уже существует",
-        });
-      } else {
-        form.setError("root", { message: errorMessage });
-      }
+          : "Произошла ошибка при сбросе пароля";
+      form.setError("root", { message: errorMessage });
     }
   };
+
+  if (success) {
+    return (
+      <div className="mx-auto w-full max-w-md space-y-6">
+        <div className="space-y-2 text-center">
+          <h1 className="text-2xl font-bold tracking-tight">
+            Пароль успешно изменен
+          </h1>
+          <p className="text-muted-foreground">
+            Ваш пароль был успешно изменен. Сейчас вы будете перенаправлены на
+            страницу входа.
+          </p>
+        </div>
+
+        <div className="bg-green-50 border-green-200 text-green-800 dark:bg-green-950 dark:border-green-800 dark:text-green-200 rounded-md border px-4 py-3 text-sm">
+          Перенаправление через 3 секунды...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto w-full max-w-md space-y-6">
       <div className="space-y-2 text-center">
-        <h1 className="text-2xl font-bold tracking-tight">Регистрация</h1>
+        <h1 className="text-2xl font-bold tracking-tight">
+          Создание нового пароля
+        </h1>
+        <p className="text-muted-foreground">
+          Введите новый пароль для вашего аккаунта
+        </p>
       </div>
 
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -71,47 +91,17 @@ export const RegisterForm = () => {
 
         <Controller
           control={form.control}
-          name="name"
+          name="newPassword"
           render={({ field, fieldState }) => (
-            <Field data-invalid={!!fieldState.error}>
-              <FieldLabel>Имя</FieldLabel>
-              <Input
-                placeholder="Введите ваше имя"
-                aria-invalid={!!fieldState.error}
-                {...field}
-              />
-              <FieldError>{fieldState.error?.message}</FieldError>
-            </Field>
-          )}
-        />
-
-        <Controller
-          control={form.control}
-          name="email"
-          render={({ field, fieldState }) => (
-            <Field data-invalid={!!fieldState.error}>
-              <FieldLabel>Email</FieldLabel>
-              <Input
-                type="email"
-                placeholder="example@email.com"
-                aria-invalid={!!fieldState.error}
-                {...field}
-              />
-              <FieldError>{fieldState.error?.message}</FieldError>
-            </Field>
-          )}
-        />
-
-        <Controller
-          control={form.control}
-          name="password"
-          render={({ field, fieldState }) => (
-            <Field data-invalid={!!fieldState.error}>
-              <FieldLabel>Пароль</FieldLabel>
+            <Field
+              className="flex flex-col gap-1.5"
+              data-invalid={!!fieldState.error}
+            >
+              <FieldLabel>Новый пароль</FieldLabel>
               <div className="relative">
                 <Input
                   type={showPassword ? "text" : "password"}
-                  placeholder="Введите пароль"
+                  placeholder="Введите новый пароль"
                   aria-invalid={!!fieldState.error}
                   {...field}
                 />
@@ -138,12 +128,15 @@ export const RegisterForm = () => {
           control={form.control}
           name="confirmPassword"
           render={({ field, fieldState }) => (
-            <Field data-invalid={!!fieldState.error}>
-              <FieldLabel>Подтвердите пароль</FieldLabel>
+            <Field
+              className="flex flex-col gap-1.5"
+              data-invalid={!!fieldState.error}
+            >
+              <FieldLabel>Подтверждение пароля</FieldLabel>
               <div className="relative">
                 <Input
                   type={showConfirmPassword ? "text" : "password"}
-                  placeholder="Повторите пароль"
+                  placeholder="Повторите новый пароль"
                   aria-invalid={!!fieldState.error}
                   {...field}
                 />
@@ -169,15 +162,17 @@ export const RegisterForm = () => {
         <Button
           type="submit"
           className="w-full"
-          disabled={form.formState.isSubmitting || registerMutation.isPending}
+          disabled={
+            form.formState.isSubmitting || resetPasswordMutation.isPending
+          }
         >
-          {form.formState.isSubmitting || registerMutation.isPending ? (
+          {form.formState.isSubmitting || resetPasswordMutation.isPending ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Создание аккаунта...
+              Сохранение...
             </>
           ) : (
-            "Создать аккаунт"
+            "Сохранить новый пароль"
           )}
         </Button>
       </form>

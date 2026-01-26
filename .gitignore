@@ -1,5 +1,6 @@
 .env
 .tanstack
+/src/shared/api
 
 # Logs
 logs
