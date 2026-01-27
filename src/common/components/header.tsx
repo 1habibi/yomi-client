@@ -13,6 +13,7 @@ import {
 } from "@/common/components/ui/dropdown-menu";
 import { AnimeSearchModal } from "@/modules/anime";
 import { useAuthContext, useLogout } from "@/modules/auth";
+import { NotificationsBell } from "@/modules/notifications/components/notifications-bell";
 
 export function Header() {
   const location = useLocation();
@@ -66,7 +67,9 @@ export function Header() {
           </div>
           <div className="col-span-2 flex items-center space-x-4">
             {auth.isAuthenticated ? (
-              <DropdownMenu>
+              <>
+                <NotificationsBell />
+                <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className="hover:bg-accent flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 transition-colors select-none focus:ring-0 focus:outline-none">
                     <Avatar className="size-8">
@@ -95,6 +98,7 @@ export function Header() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+              </>
             ) : (
               <>
                 <Button asChild variant="default">
