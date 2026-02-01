@@ -2,6 +2,13 @@ import { Star } from "lucide-react";
 import React from "react";
 
 import { Badge } from "@/common/components/ui/badge";
+import { useAuthContext } from "@/modules/auth/hooks/use-auth-context";
+import {
+  AddToListDropdown,
+  RatingStars,
+  useAnimeStatus,
+  useUpdateRating,
+} from "@/modules/user-anime";
 import type { AnimeResponseDto } from "@/shared/api/generated/model";
 
 interface AnimeDetailHeroProps {
@@ -9,6 +16,17 @@ interface AnimeDetailHeroProps {
 }
 
 export const AnimeDetailHero: React.FC<AnimeDetailHeroProps> = ({ anime }) => {
+  const { auth } = useAuthContext();
+  const { data: status } = useAnimeStatus(anime.id);
+  const updateRating = useUpdateRating();
+
+  const handleRatingChange = (rating: number) => {
+    updateRating.mutate({
+      animeId: anime.id,
+      data: { rating },
+    });
+  };
+
   return (
     <div>
       <div className="container mx-auto px-4 py-8">
@@ -112,6 +130,31 @@ export const AnimeDetailHero: React.FC<AnimeDetailHeroProps> = ({ anime }) => {
               </div>
             )}
 
+            {auth.user && (
+              <div className="space-y-3">
+                <div className="flex items-center gap-4">
+                  <AddToListDropdown animeId={anime.id} />
+                  {status?.list_types && status.list_types.length > 0 && (
+                    <div className="text-muted-foreground text-sm">
+                      В списках: {status.list_types.length}
+                    </div>
+                  )}
+                </div>
+                {status?.list_types && status.list_types.length > 0 && (
+                  <div>
+                    <p className="text-muted-foreground mb-2 text-sm">
+                      Ваша оценка:
+                    </p>
+                    <RatingStars
+                      rating={status.rating}
+                      onRatingChange={handleRatingChange}
+                      size="md"
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+
             <div className="space-y-3 text-sm">
               {anime.anime_studios && anime.anime_studios.length > 0 && (
                 <div className="flex gap-2">
@@ -126,21 +169,22 @@ export const AnimeDetailHero: React.FC<AnimeDetailHeroProps> = ({ anime }) => {
                 </div>
               )}
 
-              {anime.anime_translations && anime.anime_translations.length > 0 && (
-                <div className="flex gap-2">
-                  <span className="text-muted-foreground font-medium">
-                    Озвучка:
-                  </span>
-                  <div className="flex flex-wrap gap-1">
-                    {anime.anime_translations.map((translation, index) => (
-                      <span key={translation.id}>
-                        {translation.title}
-                        {index < anime.anime_translations.length - 1 && ", "}
-                      </span>
-                    ))}
+              {anime.anime_translations &&
+                anime.anime_translations.length > 0 && (
+                  <div className="flex gap-2">
+                    <span className="text-muted-foreground font-medium">
+                      Озвучка:
+                    </span>
+                    <div className="flex flex-wrap gap-1">
+                      {anime.anime_translations.map((translation, index) => (
+                        <span key={translation.id}>
+                          {translation.title}
+                          {index < anime.anime_translations.length - 1 && ", "}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
               <div className="flex flex-wrap gap-3">
                 {anime.shikimori_id && (

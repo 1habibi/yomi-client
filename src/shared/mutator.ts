@@ -81,6 +81,10 @@ export const customInstance = async <T>({
 
           const retryResponse = await fetch(finalUrl, requestConfig);
           if (retryResponse.ok) {
+            // 204 No Content не имеет тела ответа
+            if (retryResponse.status === 204) {
+              return null as T;
+            }
             return await retryResponse.json();
           }
         }
@@ -93,6 +97,11 @@ export const customInstance = async <T>({
         statusCode: response.status,
       }));
       throw errorData;
+    }
+
+    // 204 No Content не имеет тела ответа
+    if (response.status === 204) {
+      return null as T;
     }
 
     return await response.json();

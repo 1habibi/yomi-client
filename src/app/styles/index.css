@@ -196,3 +196,81 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Sonner Toast Customization */
+[data-sonner-toast],
+[data-sonner-toast][data-styled="true"] {
+  background: hsl(var(--card)) !important;
+  background-color: hsl(var(--card)) !important;
+  color: hsl(var(--card-foreground)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+  opacity: 1 !important;
+}
+
+:root {
+  --normal-bg: hsl(var(--card)) !important;
+  --normal-border: hsl(var(--border)) !important;
+  --normal-text: hsl(var(--card-foreground)) !important;
+}
+
+.dark {
+  --normal-bg: hsl(var(--card)) !important;
+  --normal-border: hsl(var(--border)) !important;
+  --normal-text: hsl(var(--card-foreground)) !important;
+}
+
+[data-sonner-toast][data-type="success"],
+[data-sonner-toast][data-type="error"],
+[data-sonner-toast][data-type="warning"],
+[data-sonner-toast][data-type="info"] {
+  background: hsl(var(--card)) !important;
+  background-color: hsl(var(--card)) !important;
+  color: hsl(var(--card-foreground)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+  opacity: 1 !important;
+}
+
+:root [data-sonner-toast][data-type] {
+  background: rgb(255, 255, 255) !important;
+  background-color: rgb(255, 255, 255) !important;
+  color: rgb(0, 0, 0) !important;
+}
+
+.dark [data-sonner-toast][data-type] {
+  background: rgb(32, 32, 35) !important;
+  background-color: rgb(32, 32, 35) !important;
+  color: rgb(255, 255, 255) !important;
+}
+
+[data-sonner-toast] [data-title] {
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+[data-sonner-toast] [data-description] {
+  font-size: 0.875rem;
+}
+
+[data-sonner-toast] [data-button] {
+  background-color: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground)) !important;
+  border-radius: var(--radius-md);
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+[data-sonner-toast]:not([data-type]) {
+  background: hsl(var(--card)) !important;
+  opacity: 1 !important;
+}
+
+:root [data-sonner-toast]:not([data-type]) {
+  background: rgb(255, 255, 255) !important;
+  color: rgb(0, 0, 0) !important;
+}
+
+.dark [data-sonner-toast]:not([data-type]) {
+  background: rgb(32, 32, 35) !important;
+  color: rgb(255, 255, 255) !important;
+}
