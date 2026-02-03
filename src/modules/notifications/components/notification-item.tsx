@@ -1,6 +1,6 @@
 import { formatDistanceToNow } from "date-fns";
 import { ru } from "date-fns/locale";
-import { MessageSquare, ThumbsUp } from "lucide-react";
+import { CheckCircle, MessageSquare, ThumbsUp, XCircle } from "lucide-react";
 
 import {
   Avatar,
@@ -22,17 +22,38 @@ export function NotificationItem({
   notification,
   onClick,
 }: NotificationItemProps) {
-  const icon =
-    notification.type === NotificationResponseDtoType.COMMENT_REPLY ? (
-      <MessageSquare className="h-4 w-4" />
-    ) : (
-      <ThumbsUp className="h-4 w-4" />
-    );
+  const getIcon = () => {
+    switch (notification.type) {
+      case NotificationResponseDtoType.COMMENT_REPLY:
+        return <MessageSquare className="h-4 w-4" />;
+      case NotificationResponseDtoType.COMMENT_LIKE:
+        return <ThumbsUp className="h-4 w-4" />;
+      case NotificationResponseDtoType.REVIEW_APPROVED:
+        return <CheckCircle className="h-4 w-4 text-green-500" />;
+      case NotificationResponseDtoType.REVIEW_REJECTED:
+        return <XCircle className="h-4 w-4 text-red-500" />;
+      default:
+        return <ThumbsUp className="h-4 w-4" />;
+    }
+  };
 
-  const message =
-    notification.type === NotificationResponseDtoType.COMMENT_REPLY
-      ? "ответил на ваш комментарий"
-      : "понравился ваш комментарий";
+  const getMessage = () => {
+    switch (notification.type) {
+      case NotificationResponseDtoType.COMMENT_REPLY:
+        return "ответил на ваш комментарий";
+      case NotificationResponseDtoType.COMMENT_LIKE:
+        return "понравился ваш комментарий";
+      case NotificationResponseDtoType.REVIEW_APPROVED:
+        return "одобрил вашу рецензию";
+      case NotificationResponseDtoType.REVIEW_REJECTED:
+        return "отклонил вашу рецензию";
+      default:
+        return "уведомление";
+    }
+  };
+
+  const icon = getIcon();
+  const message = getMessage();
 
   return (
     <button

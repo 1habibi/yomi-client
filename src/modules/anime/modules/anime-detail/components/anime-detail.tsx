@@ -4,11 +4,19 @@ import { Card } from "@/common/components/ui/card";
 import { Separator } from "@/common/components/ui/separator";
 import { useAnime } from "@/modules/anime";
 import { CommentsSection } from "@/modules/anime/modules/anime-comments/components/comments-section";
+import { ReviewsSection } from "@/modules/reviews";
 
 import { AnimeDescription } from "./anime-description";
 import { AnimeDetailHero } from "./anime-detail-hero";
 import { AnimeScreenshots } from "./anime-screenshots";
 import { AnimeStaff } from "./anime-staff";
+
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/common/components/ui/tabs";
 
 interface AnimeDetailProps {
   id: number;
@@ -72,7 +80,20 @@ export const AnimeDetail: React.FC<AnimeDetailProps> = ({ id }) => {
 
           <Separator className="my-8" />
 
-          <CommentsSection animeId={id} />
+          <Tabs defaultValue="comments" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="comments">Комментарии</TabsTrigger>
+              <TabsTrigger value="reviews">Рецензии</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="comments" className="mt-6">
+              <CommentsSection animeId={id} />
+            </TabsContent>
+
+            <TabsContent value="reviews" className="mt-6">
+              <ReviewsSection animeId={id} />
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </div>
