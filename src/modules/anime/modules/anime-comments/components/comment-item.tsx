@@ -1,14 +1,11 @@
+import { Link } from "@tanstack/react-router";
 import { formatDistanceToNow } from "date-fns";
 import { ru } from "date-fns/locale";
 import { useState } from "react";
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/common/components/ui/avatar";
 import { Badge } from "@/common/components/ui/badge";
 import { Card } from "@/common/components/ui/card";
+import { UserAvatar } from "@/common/components/user-avatar";
 import { cn } from "@/common/utils/utils";
 import { type CommentResponseDto } from "@/shared/api/generated/model";
 
@@ -72,16 +69,27 @@ export function CommentItem({
         className="p-4 transition-all duration-300"
       >
         <div className="mb-3 flex items-start gap-3">
-          <Avatar className="h-10 w-10">
-            <AvatarImage src={comment.user.avatar_url || undefined} />
-            <AvatarFallback>
-              {comment.user.name.charAt(0).toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
+          <Link
+            to="/profiles/$userId"
+            params={{ userId: comment.user.id }}
+            className="flex-shrink-0"
+          >
+            <UserAvatar
+              user={comment.user}
+              size="md"
+              className="cursor-pointer transition-opacity hover:opacity-80"
+            />
+          </Link>
 
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="font-semibold">{comment.user.name}</span>
+              <Link
+                to="/profiles/$userId"
+                params={{ userId: comment.user.id }}
+                className="font-semibold hover:underline"
+              >
+                {comment.user.name}
+              </Link>
               <span className="text-muted-foreground text-sm">
                 {formatDistanceToNow(new Date(comment.created_at), {
                   addSuffix: true,

@@ -13,6 +13,7 @@ import { Route as AnimeRouteRouteImport } from "./pages/anime/route"
 import { Route as AuthenticatedRouteRouteImport } from "./pages/_authenticated/route"
 import { Route as IndexRouteImport } from "./pages/index"
 import { Route as AnimeIndexRouteImport } from "./pages/anime/index"
+import { Route as ProfilesUserIdRouteImport } from "./pages/profiles/$userId"
 import { Route as AuthResetPasswordRouteImport } from "./pages/auth/reset-password"
 import { Route as AuthRegisterRouteImport } from "./pages/auth/register"
 import { Route as AuthLoginRouteImport } from "./pages/auth/login"
@@ -20,6 +21,9 @@ import { Route as AuthForgotPasswordRouteImport } from "./pages/auth/forgot-pass
 import { Route as AuthEmailConfirmationRouteImport } from "./pages/auth/email-confirmation"
 import { Route as AnimeIdRouteImport } from "./pages/anime/$id"
 import { Route as AuthenticatedProfileRouteImport } from "./pages/_authenticated/profile"
+import { Route as AuthenticatedActivityRouteImport } from "./pages/_authenticated/activity"
+import { Route as AuthenticatedMessagesIndexRouteImport } from "./pages/_authenticated/messages/index"
+import { Route as AuthenticatedSettingsPrivacyRouteImport } from "./pages/_authenticated/settings/privacy"
 import { Route as AuthenticatedAdminReviewsModerationRouteImport } from "./pages/_authenticated/admin/reviews-moderation"
 
 const AnimeRouteRoute = AnimeRouteRouteImport.update({
@@ -40,6 +44,11 @@ const AnimeIndexRoute = AnimeIndexRouteImport.update({
   id: "/",
   path: "/",
   getParentRoute: () => AnimeRouteRoute,
+} as any)
+const ProfilesUserIdRoute = ProfilesUserIdRouteImport.update({
+  id: "/profiles/$userId",
+  path: "/profiles/$userId",
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
   id: "/auth/reset-password",
@@ -76,6 +85,23 @@ const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   path: "/profile",
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedActivityRoute = AuthenticatedActivityRouteImport.update({
+  id: "/activity",
+  path: "/activity",
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedMessagesIndexRoute =
+  AuthenticatedMessagesIndexRouteImport.update({
+    id: "/messages/",
+    path: "/messages/",
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSettingsPrivacyRoute =
+  AuthenticatedSettingsPrivacyRouteImport.update({
+    id: "/settings/privacy",
+    path: "/settings/privacy",
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminReviewsModerationRoute =
   AuthenticatedAdminReviewsModerationRouteImport.update({
     id: "/admin/reviews-moderation",
@@ -86,6 +112,7 @@ const AuthenticatedAdminReviewsModerationRoute =
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute
   "/anime": typeof AnimeRouteRouteWithChildren
+  "/activity": typeof AuthenticatedActivityRoute
   "/profile": typeof AuthenticatedProfileRoute
   "/anime/$id": typeof AnimeIdRoute
   "/auth/email-confirmation": typeof AuthEmailConfirmationRoute
@@ -93,11 +120,15 @@ export interface FileRoutesByFullPath {
   "/auth/login": typeof AuthLoginRoute
   "/auth/register": typeof AuthRegisterRoute
   "/auth/reset-password": typeof AuthResetPasswordRoute
+  "/profiles/$userId": typeof ProfilesUserIdRoute
   "/anime/": typeof AnimeIndexRoute
   "/admin/reviews-moderation": typeof AuthenticatedAdminReviewsModerationRoute
+  "/settings/privacy": typeof AuthenticatedSettingsPrivacyRoute
+  "/messages": typeof AuthenticatedMessagesIndexRoute
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute
+  "/activity": typeof AuthenticatedActivityRoute
   "/profile": typeof AuthenticatedProfileRoute
   "/anime/$id": typeof AnimeIdRoute
   "/auth/email-confirmation": typeof AuthEmailConfirmationRoute
@@ -105,14 +136,18 @@ export interface FileRoutesByTo {
   "/auth/login": typeof AuthLoginRoute
   "/auth/register": typeof AuthRegisterRoute
   "/auth/reset-password": typeof AuthResetPasswordRoute
+  "/profiles/$userId": typeof ProfilesUserIdRoute
   "/anime": typeof AnimeIndexRoute
   "/admin/reviews-moderation": typeof AuthenticatedAdminReviewsModerationRoute
+  "/settings/privacy": typeof AuthenticatedSettingsPrivacyRoute
+  "/messages": typeof AuthenticatedMessagesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   "/": typeof IndexRoute
   "/_authenticated": typeof AuthenticatedRouteRouteWithChildren
   "/anime": typeof AnimeRouteRouteWithChildren
+  "/_authenticated/activity": typeof AuthenticatedActivityRoute
   "/_authenticated/profile": typeof AuthenticatedProfileRoute
   "/anime/$id": typeof AnimeIdRoute
   "/auth/email-confirmation": typeof AuthEmailConfirmationRoute
@@ -120,14 +155,18 @@ export interface FileRoutesById {
   "/auth/login": typeof AuthLoginRoute
   "/auth/register": typeof AuthRegisterRoute
   "/auth/reset-password": typeof AuthResetPasswordRoute
+  "/profiles/$userId": typeof ProfilesUserIdRoute
   "/anime/": typeof AnimeIndexRoute
   "/_authenticated/admin/reviews-moderation": typeof AuthenticatedAdminReviewsModerationRoute
+  "/_authenticated/settings/privacy": typeof AuthenticatedSettingsPrivacyRoute
+  "/_authenticated/messages/": typeof AuthenticatedMessagesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | "/"
     | "/anime"
+    | "/activity"
     | "/profile"
     | "/anime/$id"
     | "/auth/email-confirmation"
@@ -135,11 +174,15 @@ export interface FileRouteTypes {
     | "/auth/login"
     | "/auth/register"
     | "/auth/reset-password"
+    | "/profiles/$userId"
     | "/anime/"
     | "/admin/reviews-moderation"
+    | "/settings/privacy"
+    | "/messages"
   fileRoutesByTo: FileRoutesByTo
   to:
     | "/"
+    | "/activity"
     | "/profile"
     | "/anime/$id"
     | "/auth/email-confirmation"
@@ -147,13 +190,17 @@ export interface FileRouteTypes {
     | "/auth/login"
     | "/auth/register"
     | "/auth/reset-password"
+    | "/profiles/$userId"
     | "/anime"
     | "/admin/reviews-moderation"
+    | "/settings/privacy"
+    | "/messages"
   id:
     | "__root__"
     | "/"
     | "/_authenticated"
     | "/anime"
+    | "/_authenticated/activity"
     | "/_authenticated/profile"
     | "/anime/$id"
     | "/auth/email-confirmation"
@@ -161,8 +208,11 @@ export interface FileRouteTypes {
     | "/auth/login"
     | "/auth/register"
     | "/auth/reset-password"
+    | "/profiles/$userId"
     | "/anime/"
     | "/_authenticated/admin/reviews-moderation"
+    | "/_authenticated/settings/privacy"
+    | "/_authenticated/messages/"
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -174,6 +224,7 @@ export interface RootRouteChildren {
   AuthLoginRoute: typeof AuthLoginRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
   AuthResetPasswordRoute: typeof AuthResetPasswordRoute
+  ProfilesUserIdRoute: typeof ProfilesUserIdRoute
 }
 
 declare module "@tanstack/react-router" {
@@ -205,6 +256,13 @@ declare module "@tanstack/react-router" {
       fullPath: "/anime/"
       preLoaderRoute: typeof AnimeIndexRouteImport
       parentRoute: typeof AnimeRouteRoute
+    }
+    "/profiles/$userId": {
+      id: "/profiles/$userId"
+      path: "/profiles/$userId"
+      fullPath: "/profiles/$userId"
+      preLoaderRoute: typeof ProfilesUserIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     "/auth/reset-password": {
       id: "/auth/reset-password"
@@ -255,6 +313,27 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof AuthenticatedProfileRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    "/_authenticated/activity": {
+      id: "/_authenticated/activity"
+      path: "/activity"
+      fullPath: "/activity"
+      preLoaderRoute: typeof AuthenticatedActivityRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    "/_authenticated/messages/": {
+      id: "/_authenticated/messages/"
+      path: "/messages"
+      fullPath: "/messages"
+      preLoaderRoute: typeof AuthenticatedMessagesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    "/_authenticated/settings/privacy": {
+      id: "/_authenticated/settings/privacy"
+      path: "/settings/privacy"
+      fullPath: "/settings/privacy"
+      preLoaderRoute: typeof AuthenticatedSettingsPrivacyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     "/_authenticated/admin/reviews-moderation": {
       id: "/_authenticated/admin/reviews-moderation"
       path: "/admin/reviews-moderation"
@@ -266,14 +345,20 @@ declare module "@tanstack/react-router" {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedActivityRoute: typeof AuthenticatedActivityRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedAdminReviewsModerationRoute: typeof AuthenticatedAdminReviewsModerationRoute
+  AuthenticatedSettingsPrivacyRoute: typeof AuthenticatedSettingsPrivacyRoute
+  AuthenticatedMessagesIndexRoute: typeof AuthenticatedMessagesIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedActivityRoute: AuthenticatedActivityRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedAdminReviewsModerationRoute:
     AuthenticatedAdminReviewsModerationRoute,
+  AuthenticatedSettingsPrivacyRoute: AuthenticatedSettingsPrivacyRoute,
+  AuthenticatedMessagesIndexRoute: AuthenticatedMessagesIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -302,6 +387,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthLoginRoute: AuthLoginRoute,
   AuthRegisterRoute: AuthRegisterRoute,
   AuthResetPasswordRoute: AuthResetPasswordRoute,
+  ProfilesUserIdRoute: ProfilesUserIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

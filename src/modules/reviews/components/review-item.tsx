@@ -1,15 +1,12 @@
+import { Link } from "@tanstack/react-router";
 import { formatDistanceToNow } from "date-fns";
 import { ru } from "date-fns/locale";
 import { AlertTriangle } from "lucide-react";
 
 import { Alert, AlertDescription } from "@/common/components/ui/alert";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/common/components/ui/avatar";
 import { Badge } from "@/common/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/common/components/ui/card";
+import { UserAvatar } from "@/common/components/user-avatar";
 import type { ReviewResponseDto } from "@/shared/api/generated/model";
 
 import { ReviewActions } from "./review-actions";
@@ -38,14 +35,25 @@ export function ReviewItem({
       <CardHeader>
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="flex min-w-0 flex-1 items-center gap-3">
-            <Avatar>
-              <AvatarImage src={review.user.avatar_url || undefined} />
-              <AvatarFallback>
-                {review.user.name.charAt(0).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
+            <Link
+              to="/profiles/$userId"
+              params={{ userId: review.user.id }}
+              className="flex-shrink-0"
+            >
+              <UserAvatar
+                user={review.user}
+                size="md"
+                className="cursor-pointer transition-opacity hover:opacity-80"
+              />
+            </Link>
             <div className="min-w-0">
-              <div className="truncate font-semibold">{review.user.name}</div>
+              <Link
+                to="/profiles/$userId"
+                params={{ userId: review.user.id }}
+                className="block truncate font-semibold hover:underline"
+              >
+                {review.user.name}
+              </Link>
               <div className="text-muted-foreground text-xs">
                 {formatDistanceToNow(new Date(review.created_at), {
                   addSuffix: true,

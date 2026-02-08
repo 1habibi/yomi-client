@@ -30,7 +30,7 @@ export const RegisterForm = () => {
 
   const onSubmit = async (data: RegisterDto & { confirmPassword: string }) => {
     try {
-      const { confirmPassword, ...registerData } = data;
+      const { confirmPassword: _confirmPassword, ...registerData } = data;
       await registerMutation.mutateAsync(
         {
           data: registerData,

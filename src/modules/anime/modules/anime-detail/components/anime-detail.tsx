@@ -2,21 +2,21 @@ import React from "react";
 
 import { Card } from "@/common/components/ui/card";
 import { Separator } from "@/common/components/ui/separator";
-import { useAnime } from "@/modules/anime";
-import { CommentsSection } from "@/modules/anime/modules/anime-comments/components/comments-section";
-import { ReviewsSection } from "@/modules/reviews";
-
-import { AnimeDescription } from "./anime-description";
-import { AnimeDetailHero } from "./anime-detail-hero";
-import { AnimeScreenshots } from "./anime-screenshots";
-import { AnimeStaff } from "./anime-staff";
-
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "@/common/components/ui/tabs";
+import { useAnime } from "@/modules/anime";
+import { CommentsSection } from "@/modules/anime/modules/anime-comments/components/comments-section";
+import { ReviewsSection } from "@/modules/reviews";
+
+import { AnimeDescription } from "./anime-description";
+import { AnimeDetailHero } from "./anime-detail-hero";
+import { AnimePlayer } from "./anime-player";
+import { AnimeScreenshots } from "./anime-screenshots";
+import { AnimeStaff } from "./anime-staff";
 
 interface AnimeDetailProps {
   id: number;
@@ -65,11 +65,11 @@ export const AnimeDetail: React.FC<AnimeDetailProps> = ({ id }) => {
             </Card>
           )}
 
-          {/* {anime.link && (
+          {anime.link && (
             <section>
               <AnimePlayer link={anime.link} title={anime.title} />
             </section>
-          )} */}
+          )}
 
           {anime.anime_screenshots && anime.anime_screenshots.length > 0 && (
             <Card className="p-6">

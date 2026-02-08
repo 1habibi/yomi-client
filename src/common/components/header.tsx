@@ -1,4 +1,5 @@
 import { Link, useLocation } from "@tanstack/react-router";
+import { Activity, LogOut, MessageCircle, Settings, User } from "lucide-react";
 
 import { useTheme } from "@/app/providers/theme-provider";
 import Logo from "@/common/components/Logo/Logo";
@@ -9,11 +10,13 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/common/components/ui/dropdown-menu";
 import { AnimeSearchModal } from "@/modules/anime";
 import { useAuthContext, useLogout } from "@/modules/auth";
 import { NotificationsBell } from "@/modules/notifications/components/notifications-bell";
+import { MessagesButton } from "@/modules/social/messages";
 
 export function Header() {
   const location = useLocation();
@@ -69,6 +72,7 @@ export function Header() {
             {auth.isAuthenticated ? (
               <>
                 <NotificationsBell />
+                <MessagesButton />
                 <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className="hover:bg-accent flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 transition-colors select-none focus:ring-0 focus:outline-none">
@@ -89,12 +93,40 @@ export function Header() {
                     <span className="text-sm">{auth.user?.name}</span>
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent>
+                <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuItem asChild>
-                    <Link to="/profile">Профиль</Link>
+                    <Link
+                      to="/profiles/$userId"
+                      params={{ userId: auth.user?.id || "" }}
+                      className="flex items-center"
+                    >
+                      <User className="mr-2 h-4 w-4" />
+                      Мой профиль
+                    </Link>
                   </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile" className="flex items-center">
+                      <Settings className="mr-2 h-4 w-4" />
+                      Настройки
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/messages" className="flex items-center">
+                      <MessageCircle className="mr-2 h-4 w-4" />
+                      Сообщения
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/activity" className="flex items-center">
+                      <Activity className="mr-2 h-4 w-4" />
+                      Лента активности
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout}>
-                    <p className="text-destructive">Выход</p>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span className="text-destructive">Выход</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

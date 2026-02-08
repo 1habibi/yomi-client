@@ -2,11 +2,7 @@ import { formatDistanceToNow } from "date-fns";
 import { ru } from "date-fns/locale";
 import { CheckCircle, MessageSquare, ThumbsUp, XCircle } from "lucide-react";
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/common/components/ui/avatar";
+import { UserAvatar } from "@/common/components/user-avatar";
 import { cn } from "@/common/utils/utils";
 import {
   type NotificationResponseDto,
@@ -64,12 +60,7 @@ export function NotificationItem({
       )}
     >
       <div className="flex items-start gap-3">
-        <Avatar className="h-8 w-8">
-          <AvatarImage src={notification.actor.avatar_url || undefined} />
-          <AvatarFallback>
-            {notification.actor.name.charAt(0).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
+        <UserAvatar user={notification.actor} size="sm" />
 
         <div className="min-w-0 flex-1">
           <div className="mb-1 flex items-center gap-2">
