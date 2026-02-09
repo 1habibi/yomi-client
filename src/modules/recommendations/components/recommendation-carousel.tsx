@@ -66,14 +66,17 @@ export const RecommendationCarousel: React.FC<RecommendationCarouselProps> = ({
 
       <div
         ref={scrollRef}
-        className="scrollbar-hide flex gap-4 overflow-x-auto pb-4"
+        className="scrollbar-hide -mx-1 flex gap-4 overflow-x-auto px-1 pb-4"
         style={{
           scrollbarWidth: "none",
           msOverflowStyle: "none",
         }}
       >
         {items.map((item) => (
-          <div key={item.anime_id} className="w-[180px] flex-shrink-0">
+          <div
+            key={item.anime_id}
+            className="w-[160px] flex-shrink-0 sm:w-[180px] md:w-[200px] lg:w-[220px]"
+          >
             <RecommendationCard item={item} />
           </div>
         ))}

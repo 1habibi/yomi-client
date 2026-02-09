@@ -31,7 +31,6 @@ function HomePage() {
   } = useAuthContext();
   const logoutMutation = useLogout();
 
-  // Рекомендации
   const { data: personalRecs } = usePersonalRecommendations(
     20,
     isAuthenticated,
