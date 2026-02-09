@@ -19,8 +19,9 @@ import {
   SelectValue,
 } from "@/common/components/ui/select";
 import { Separator } from "@/common/components/ui/separator";
+import { useAnalyticsControllerTrackSearch } from "@/shared/api/generated/analytics/analytics";
 
-import type { AnimeFilters, Genre } from "../../..";
+import type { AnimeFilters, Genre, PaginationMeta } from "../../..";
 import { SORT_OPTIONS, STATUS_OPTIONS } from "../../..";
 
 import { RangeFilter } from "./range-filter";
@@ -30,6 +31,7 @@ interface FiltersAnimeProps {
   genres?: Genre[];
   hasActiveFilters: boolean;
   isPending?: boolean;
+  pagination?: PaginationMeta;
   onUpdate: (newValues: Partial<AnimeFilters>) => void;
   onReset: () => void;
 }
@@ -40,18 +42,38 @@ export const FiltersAnime = React.memo<FiltersAnimeProps>(
     genres,
     hasActiveFilters,
     isPending = false,
+    pagination,
     onUpdate,
     onReset,
   }) => {
     const [localSearch, setLocalSearch] = React.useState(values.search || "");
+    const trackSearchMutation = useAnalyticsControllerTrackSearch();
+    const trackedSearches = React.useRef(new Set<string>());
 
     React.useEffect(() => {
       setLocalSearch(values.search || "");
     }, [values.search]);
 
+    React.useEffect(() => {
+      if (
+        values.search &&
+        pagination?.total !== undefined &&
+        !trackedSearches.current.has(values.search)
+      ) {
+        trackedSearches.current.add(values.search);
+        trackSearchMutation.mutate({
+          data: {
+            query: values.search,
+            results_count: pagination.total,
+          },
+        });
+      }
+    }, [values.search, pagination?.total, trackSearchMutation]);
+
     const handleSearchSubmit = () => {
-      if (localSearch.trim() !== values.search) {
-        onUpdate({ search: localSearch.trim() || undefined });
+      const trimmedSearch = localSearch.trim();
+      if (trimmedSearch !== values.search) {
+        onUpdate({ search: trimmedSearch || undefined });
       }
     };
 

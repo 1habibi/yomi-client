@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { Calendar, Search, Star, Tv } from "lucide-react";
 import React, { useCallback, useRef, useState } from "react";
 
@@ -31,19 +32,31 @@ export const AnimeSearchModal: React.FC<AnimeSearchModalProps> = ({
   const {
     query,
     setQuery,
+    debouncedQuery,
     searchResults,
     isSearching,
     searchError,
     hasResults,
+    trackSearchClick,
   } = useAnimeDebounceSearch();
 
   const [isOpen, setIsOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleSelect = useCallback(() => {
-    setIsOpen(false);
-    setQuery("");
-  }, [setQuery]);
+  const handleSelect = useCallback(
+    (animeId: number) => {
+      trackSearchClick({
+        data: {
+          query: debouncedQuery,
+          clicked_anime_id: animeId,
+        },
+      });
+
+      setIsOpen(false);
+      setQuery("");
+    },
+    [debouncedQuery, trackSearchClick, setQuery],
+  );
 
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -120,12 +133,14 @@ export const AnimeSearchModal: React.FC<AnimeSearchModalProps> = ({
                   {searchResults.map((anime: AnimeItem) => (
                     <CommandItem
                       key={anime.id}
-                      onSelect={() => handleSelect()}
+                      onSelect={() => handleSelect(anime.id)}
                       onMouseDown={(e) => e.preventDefault()}
                       className="cursor-pointer p-0"
+                      asChild
                     >
-                      <Card className="w-full rounded-none rounded-b-xs border-0 py-0 shadow-none">
-                        <CardContent className="p-3">
+                      <Link to="/anime/$id" params={{ id: anime.id.toString() }}>
+                        <Card className="w-full rounded-none rounded-b-xs border-0 py-0 shadow-none">
+                          <CardContent className="p-3">
                           <div className="flex gap-3">
                             <div className="flex-shrink-0">
                               <img
@@ -175,6 +190,7 @@ export const AnimeSearchModal: React.FC<AnimeSearchModalProps> = ({
                           </div>
                         </CardContent>
                       </Card>
+                      </Link>
                     </CommandItem>
                   ))}
                 </>

@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from "./pages/__root"
+import { Route as DiscoveryRouteImport } from "./pages/discovery"
 import { Route as AnimeRouteRouteImport } from "./pages/anime/route"
 import { Route as AuthenticatedRouteRouteImport } from "./pages/_authenticated/route"
 import { Route as IndexRouteImport } from "./pages/index"
@@ -26,6 +27,11 @@ import { Route as AuthenticatedMessagesIndexRouteImport } from "./pages/_authent
 import { Route as AuthenticatedSettingsPrivacyRouteImport } from "./pages/_authenticated/settings/privacy"
 import { Route as AuthenticatedAdminReviewsModerationRouteImport } from "./pages/_authenticated/admin/reviews-moderation"
 
+const DiscoveryRoute = DiscoveryRouteImport.update({
+  id: "/discovery",
+  path: "/discovery",
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AnimeRouteRoute = AnimeRouteRouteImport.update({
   id: "/anime",
   path: "/anime",
@@ -112,6 +118,7 @@ const AuthenticatedAdminReviewsModerationRoute =
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute
   "/anime": typeof AnimeRouteRouteWithChildren
+  "/discovery": typeof DiscoveryRoute
   "/activity": typeof AuthenticatedActivityRoute
   "/profile": typeof AuthenticatedProfileRoute
   "/anime/$id": typeof AnimeIdRoute
@@ -128,6 +135,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute
+  "/discovery": typeof DiscoveryRoute
   "/activity": typeof AuthenticatedActivityRoute
   "/profile": typeof AuthenticatedProfileRoute
   "/anime/$id": typeof AnimeIdRoute
@@ -147,6 +155,7 @@ export interface FileRoutesById {
   "/": typeof IndexRoute
   "/_authenticated": typeof AuthenticatedRouteRouteWithChildren
   "/anime": typeof AnimeRouteRouteWithChildren
+  "/discovery": typeof DiscoveryRoute
   "/_authenticated/activity": typeof AuthenticatedActivityRoute
   "/_authenticated/profile": typeof AuthenticatedProfileRoute
   "/anime/$id": typeof AnimeIdRoute
@@ -166,6 +175,7 @@ export interface FileRouteTypes {
   fullPaths:
     | "/"
     | "/anime"
+    | "/discovery"
     | "/activity"
     | "/profile"
     | "/anime/$id"
@@ -182,6 +192,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | "/"
+    | "/discovery"
     | "/activity"
     | "/profile"
     | "/anime/$id"
@@ -200,6 +211,7 @@ export interface FileRouteTypes {
     | "/"
     | "/_authenticated"
     | "/anime"
+    | "/discovery"
     | "/_authenticated/activity"
     | "/_authenticated/profile"
     | "/anime/$id"
@@ -219,6 +231,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AnimeRouteRoute: typeof AnimeRouteRouteWithChildren
+  DiscoveryRoute: typeof DiscoveryRoute
   AuthEmailConfirmationRoute: typeof AuthEmailConfirmationRoute
   AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
   AuthLoginRoute: typeof AuthLoginRoute
@@ -229,6 +242,13 @@ export interface RootRouteChildren {
 
 declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
+    "/discovery": {
+      id: "/discovery"
+      path: "/discovery"
+      fullPath: "/discovery"
+      preLoaderRoute: typeof DiscoveryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     "/anime": {
       id: "/anime"
       path: "/anime"
@@ -382,6 +402,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AnimeRouteRoute: AnimeRouteRouteWithChildren,
+  DiscoveryRoute: DiscoveryRoute,
   AuthEmailConfirmationRoute: AuthEmailConfirmationRoute,
   AuthForgotPasswordRoute: AuthForgotPasswordRoute,
   AuthLoginRoute: AuthLoginRoute,

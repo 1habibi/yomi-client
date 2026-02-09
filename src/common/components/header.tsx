@@ -64,6 +64,16 @@ export function Header() {
             >
               Каталог
             </Link>
+            <Link
+              to="/discovery"
+              className={`rounded-lg px-3 py-2 text-sm transition-colors ${
+                isActive("/discovery")
+                  ? "text-accent-foreground bg-accent"
+                  : "hover:bg-accent hover:text-accent-foreground"
+              }`}
+            >
+              🔍 Нейропоиск
+            </Link>
           </nav>
           <div className="col-span-2 mx-5 flex items-center space-x-4">
             <AnimeSearchModal></AnimeSearchModal>

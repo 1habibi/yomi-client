@@ -1,11 +1,15 @@
 import React from "react";
 
+import { useKodikTracker } from "../hooks/use-kodik-tracker";
+
 interface AnimePlayerProps {
   link: string | null;
   title?: string | null;
+  animeId?: number;
 }
 
-export const AnimePlayer: React.FC<AnimePlayerProps> = ({ link, title }) => {
+export const AnimePlayer: React.FC<AnimePlayerProps> = ({ link, title, animeId }) => {
+  useKodikTracker(animeId);
   if (!link) {
     return (
       <div className="bg-muted flex aspect-video items-center justify-center rounded-lg">

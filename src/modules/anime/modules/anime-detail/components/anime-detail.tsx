@@ -9,7 +9,9 @@ import {
   TabsTrigger,
 } from "@/common/components/ui/tabs";
 import { useAnime } from "@/modules/anime";
+import { usePageViewTracker } from "@/modules/anime/hooks/use-page-view-tracker";
 import { CommentsSection } from "@/modules/anime/modules/anime-comments/components/comments-section";
+import { SimilarAnimeSection } from "@/modules/recommendations";
 import { ReviewsSection } from "@/modules/reviews";
 
 import { AnimeDescription } from "./anime-description";
@@ -24,6 +26,9 @@ interface AnimeDetailProps {
 
 export const AnimeDetail: React.FC<AnimeDetailProps> = ({ id }) => {
   const { data: anime, isLoading, error } = useAnime(id);
+
+  // Трекинг просмотров страницы
+  usePageViewTracker(id);
 
   if (isLoading) {
     return (
@@ -67,7 +72,7 @@ export const AnimeDetail: React.FC<AnimeDetailProps> = ({ id }) => {
 
           {anime.link && (
             <section>
-              <AnimePlayer link={anime.link} title={anime.title} />
+              <AnimePlayer link={anime.link} title={anime.title} animeId={id} />
             </section>
           )}
 
@@ -77,6 +82,8 @@ export const AnimeDetail: React.FC<AnimeDetailProps> = ({ id }) => {
               <AnimeScreenshots screenshots={anime.anime_screenshots} />
             </Card>
           )}
+
+          <SimilarAnimeSection animeId={id} />
 
           <Separator className="my-8" />
 

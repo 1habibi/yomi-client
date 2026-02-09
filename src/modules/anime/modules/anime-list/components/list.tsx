@@ -59,6 +59,7 @@ export const AnimeList: React.FC = () => {
         values={filters}
         genres={genres}
         hasActiveFilters={hasActiveFilters}
+        pagination={pagination}
         onUpdate={updateFilters}
         onReset={resetFilters}
         isPending={loading}

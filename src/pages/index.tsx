@@ -3,6 +3,12 @@ import { Loader2 } from "lucide-react";
 
 import { Button } from "@/common/components/ui/button";
 import { useAuthContext, useLogout } from "@/modules/auth";
+import {
+  RecommendationCarousel,
+  usePersonalRecommendations,
+  usePopular,
+  useTrending,
+} from "@/modules/recommendations";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
@@ -24,6 +30,14 @@ function HomePage() {
     auth: { isAuthenticated, user },
   } = useAuthContext();
   const logoutMutation = useLogout();
+
+  // Рекомендации
+  const { data: personalRecs } = usePersonalRecommendations(
+    20,
+    isAuthenticated,
+  );
+  const { data: popularAnime } = usePopular(20);
+  const { data: trendingAnime } = useTrending(20);
 
   const handleLogout = () => {
     logoutMutation.mutate();
@@ -73,6 +87,29 @@ function HomePage() {
           </div>
         </div>
       )}
+
+      <div className="space-y-8">
+        {isAuthenticated && personalRecs?.recommendations && (
+          <RecommendationCarousel
+            title="Персональные рекомендации"
+            items={personalRecs.recommendations}
+          />
+        )}
+
+        {trendingAnime?.items && (
+          <RecommendationCarousel
+            title="Сейчас в тренде"
+            items={trendingAnime.items}
+          />
+        )}
+
+        {popularAnime?.items && (
+          <RecommendationCarousel
+            title="Популярные аниме"
+            items={popularAnime.items}
+          />
+        )}
+      </div>
     </div>
   );
 }
