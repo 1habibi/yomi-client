@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 
 import { useAnalyticsControllerTrackSearch } from "@/shared/api/generated/analytics/analytics";
 
@@ -25,31 +25,47 @@ export function useAnimeDebounceSearch(initialQuery: string = "") {
     !!debouncedQuery,
   );
 
-  useEffect(() => {
-    if (
-      debouncedQuery &&
-      searchQuery.data &&
-      !trackedQueries.current.has(debouncedQuery)
-    ) {
-      trackedQueries.current.add(debouncedQuery);
-      trackSearchMutation.mutate({
-        data: {
-          query: debouncedQuery,
-          results_count: searchQuery.data.pagination.total,
-        },
-      });
-    }
-  }, [debouncedQuery, searchQuery.data?.pagination.total]); // eslint-disable-line react-hooks/exhaustive-deps
+  const trackSearch = useCallback(
+    (searchTerm: string, resultsCount: number) => {
+      if (!trackedQueries.current.has(searchTerm)) {
+        trackedQueries.current.add(searchTerm);
+        trackSearchMutation.mutate({
+          data: {
+            query: searchTerm,
+            results_count: resultsCount,
+          },
+        });
+      }
+    },
+    [trackSearchMutation],
+  );
 
-  return {
-    query,
-    setQuery,
-    debouncedQuery,
-    searchResults: searchQuery.data?.data || [],
-    isSearching: searchQuery.isLoading,
-    searchError: searchQuery.error,
-    hasResults: !!searchQuery.data?.data.length,
-    totalResults: searchQuery.data?.pagination.total || 0,
-    trackSearchClick: trackSearchMutation.mutate,
-  };
+  useEffect(() => {
+    if (debouncedQuery && searchQuery.data) {
+      trackSearch(debouncedQuery, searchQuery.data.pagination.total);
+    }
+  }, [debouncedQuery, searchQuery.data, trackSearch]);
+
+  return useMemo(
+    () => ({
+      query,
+      setQuery,
+      debouncedQuery,
+      searchResults: searchQuery.data?.data || [],
+      isSearching: searchQuery.isLoading,
+      searchError: searchQuery.error,
+      hasResults: !!searchQuery.data?.data.length,
+      totalResults: searchQuery.data?.pagination.total || 0,
+      trackSearchClick: trackSearchMutation.mutate,
+    }),
+    [
+      query,
+      setQuery,
+      debouncedQuery,
+      searchQuery.data,
+      searchQuery.isLoading,
+      searchQuery.error,
+      trackSearchMutation.mutate,
+    ],
+  );
 }

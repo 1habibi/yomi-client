@@ -24,6 +24,7 @@ import { useAuthContext } from "@/modules/auth/hooks/use-auth-context";
 import { CommentsControllerGetCommentsByAnimeSortBy } from "@/shared/api/generated/model";
 
 import { useAnimeComments } from "../hooks/use-anime-comments";
+import { useCommentsWebSocket } from "../hooks/use-comments-websocket";
 import { useCreateComment } from "../hooks/use-create-comment";
 import { useDeleteComment } from "../hooks/use-delete-comment";
 import { useLikeComment } from "../hooks/use-like-comment";
@@ -51,17 +52,11 @@ export function CommentsSection({ animeId }: CommentsSectionProps) {
   const location = useLocation();
   const { auth } = useAuthContext();
 
-  // Перезагрузка только если на первой странице и сортировка по новым
-  const enablePolling =
-    page === 1 && sortBy === CommentsControllerGetCommentsByAnimeSortBy.newest;
+  // WebSocket подключение для получения комментариев в реальном времени
+  useCommentsWebSocket(animeId, true);
 
   // Загрузка комментариев
-  const { data, isLoading } = useAnimeComments(
-    animeId,
-    page,
-    sortBy,
-    enablePolling,
-  );
+  const { data, isLoading } = useAnimeComments(animeId, page, sortBy);
 
   const createComment = useCreateComment();
   const updateComment = useUpdateComment(animeId);
@@ -102,9 +97,12 @@ export function CommentsSection({ animeId }: CommentsSectionProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, sortBy]);
 
-  // Обработка новых комментариев
+  // Обработка новых комментариев (только на первой странице и при сортировке по новым)
   useEffect(() => {
-    if (!isLoading && data && enablePolling && data.pagination) {
+    const shouldDetectNewComments =
+      page === 1 && sortBy === CommentsControllerGetCommentsByAnimeSortBy.newest;
+
+    if (!isLoading && data && shouldDetectNewComments && data.pagination) {
       const currentTotal = data.pagination.total;
       if (previousTotalRef.current === 0) {
         previousTotalRef.current = currentTotal;
@@ -119,7 +117,7 @@ export function CommentsSection({ animeId }: CommentsSectionProps) {
         setShowNewCommentsBar(true);
       }
     }
-  }, [data, isLoading, enablePolling]);
+  }, [data, isLoading, page, sortBy]);
 
   const handleShowNewComments = () => {
     if (!data?.pagination || !data?.data) return;

@@ -1,10 +1,11 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 
 import {
   animeControllerGetAllAnime,
   getAnimeControllerGetAllAnimeQueryKey,
 } from "@/shared/api/generated/anime/anime";
+import { QUERY_CACHE_STRATEGIES } from "@/shared/constants/query-config";
 
 import { useAnimeFilters } from "../modules/anime-list/hooks/use-anime-filters";
 
@@ -29,7 +30,7 @@ export function useAnimePaginationList(options?: { enablePrefetch?: boolean }) {
       queryClient.prefetchQuery({
         queryKey: getAnimeControllerGetAllAnimeQueryKey(nextParams),
         queryFn: () => animeControllerGetAllAnime(nextParams),
-        staleTime: 5 * 60 * 1000,
+        staleTime: QUERY_CACHE_STRATEGIES.NORMAL.staleTime,
       });
     }
   }, [
@@ -70,31 +71,50 @@ export function useAnimePaginationList(options?: { enablePrefetch?: boolean }) {
     queryClient.invalidateQueries({ queryKey: ["/anime"] });
   }, [queryClient]);
 
-  return {
-    anime: data?.data || [],
-    pagination: pagination || {
-      page: 1,
-      limit: 20,
-      total: 0,
-      total_pages: 0,
-      has_next: false,
-      has_prev: false,
-    },
+  return useMemo(
+    () => ({
+      anime: data?.data || [],
+      pagination: pagination || {
+        page: 1,
+        limit: 20,
+        total: 0,
+        total_pages: 0,
+        has_next: false,
+        has_prev: false,
+      },
 
-    loading: isLoading,
-    isFetching,
-    error,
+      loading: isLoading,
+      isFetching,
+      error,
 
-    updateFilters,
-    resetFilters,
-    searchAnime: handleSearch,
-    goToPage,
-    nextPage,
-    prevPage,
-    refresh,
+      updateFilters,
+      resetFilters,
+      searchAnime: handleSearch,
+      goToPage,
+      nextPage,
+      prevPage,
+      refresh,
 
-    currentPage: page,
-    currentFilters: apiFilters,
-    hasActiveFilters,
-  };
+      currentPage: page,
+      currentFilters: apiFilters,
+      hasActiveFilters,
+    }),
+    [
+      data,
+      pagination,
+      isLoading,
+      isFetching,
+      error,
+      updateFilters,
+      resetFilters,
+      handleSearch,
+      goToPage,
+      nextPage,
+      prevPage,
+      refresh,
+      page,
+      apiFilters,
+      hasActiveFilters,
+    ],
+  );
 }

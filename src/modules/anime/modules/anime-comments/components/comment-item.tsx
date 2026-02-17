@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { formatDistanceToNow } from "date-fns";
 import { ru } from "date-fns/locale";
-import { useState } from "react";
+import React, { useState } from "react";
 
 import { Badge } from "@/common/components/ui/badge";
 import { Card } from "@/common/components/ui/card";
@@ -25,7 +25,7 @@ interface CommentItemProps {
   isLoading?: boolean;
 }
 
-export function CommentItem({
+export const CommentItem = React.memo<CommentItemProps>(function CommentItem({
   comment,
   currentUserId,
   depth = 0,
@@ -36,7 +36,7 @@ export function CommentItem({
   onLike,
   onReport,
   isLoading = false,
-}: CommentItemProps) {
+}) {
   const [isReplying, setIsReplying] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -177,4 +177,4 @@ export function CommentItem({
       )}
     </div>
   );
-}
+});

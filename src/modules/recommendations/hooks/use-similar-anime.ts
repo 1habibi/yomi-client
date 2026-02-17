@@ -1,4 +1,5 @@
 import { useRecommendationsControllerGetSimilar } from "@/shared/api/generated/recommendations/recommendations";
+import { QUERY_CACHE_STRATEGIES } from "@/shared/constants/query-config";
 
 export function useSimilarAnime(
   animeId: number,
@@ -10,10 +11,8 @@ export function useSimilarAnime(
     { top_n: topN },
     {
       query: {
+        ...QUERY_CACHE_STRATEGIES.IMMUTABLE,
         enabled: enabled && !!animeId,
-        staleTime: 60 * 60 * 1000,
-        gcTime: 2 * 60 * 60 * 1000,
-        retry: 2,
       },
     },
   );

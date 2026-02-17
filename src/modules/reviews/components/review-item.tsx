@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { formatDistanceToNow } from "date-fns";
 import { ru } from "date-fns/locale";
 import { AlertTriangle } from "lucide-react";
+import React from "react";
 
 import { Alert, AlertDescription } from "@/common/components/ui/alert";
 import { Badge } from "@/common/components/ui/badge";
@@ -21,13 +22,13 @@ interface ReviewItemProps {
   onDelete?: () => void;
 }
 
-export function ReviewItem({
+export const ReviewItem = React.memo<ReviewItemProps>(function ReviewItem({
   review,
   currentUserId,
   onLike,
   onEdit,
   onDelete,
-}: ReviewItemProps) {
+}) {
   const isAuthor = currentUserId === review.user.id;
 
   return (
@@ -128,4 +129,4 @@ export function ReviewItem({
       </CardContent>
     </Card>
   );
-}
+});

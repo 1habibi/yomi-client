@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 import { AuthProvider } from "@/app/providers/auth-provider.tsx";
 import { Router } from "@/app/providers/router.tsx";
 import { ThemeProvider } from "@/app/providers/theme-provider.tsx";
+import { NotificationWebSocketListener } from "@/modules/notifications";
 import { WebSocketProvider } from "@/modules/social/messages";
 
 import { queryClient } from "./config/query-client.ts";
@@ -20,6 +21,7 @@ if (!rootElement.innerHTML) {
       <AuthProvider>
         <WebSocketProvider>
           <ThemeProvider>
+            <NotificationWebSocketListener />
             <Toaster
               position="top-right"
               richColors

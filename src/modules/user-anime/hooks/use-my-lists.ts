@@ -1,4 +1,5 @@
 import { useUserAnimeControllerGetMyLists } from "@/shared/api/generated/user-anime-lists/user-anime-lists";
+import { QUERY_CACHE_STRATEGIES } from "@/shared/constants/query-config";
 
 export function useMyLists(
   sort: "date" | "rating" | "title" | "custom" = "custom",
@@ -6,9 +7,7 @@ export function useMyLists(
   return useUserAnimeControllerGetMyLists(
     { sort },
     {
-      query: {
-        staleTime: 5 * 60 * 1000, // 5 минут
-      },
+      query: QUERY_CACHE_STRATEGIES.NORMAL,
     },
   );
 }

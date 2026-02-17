@@ -1,5 +1,6 @@
 import { useAnimeControllerGetAllAnime } from "@/shared/api/generated/anime/anime";
 import type { AnimeControllerGetAllAnimeParams } from "@/shared/api/generated/model";
+import { QUERY_CACHE_STRATEGIES } from "@/shared/constants/query-config";
 
 import { animeFiltersSchema, type AnimeFilters } from "../types";
 
@@ -30,9 +31,8 @@ export function useAnimeList(
 
   return useAnimeControllerGetAllAnime(params, {
     query: {
+      ...QUERY_CACHE_STRATEGIES.NORMAL,
       enabled,
-      staleTime: 5 * 60 * 1000,
-      gcTime: 10 * 60 * 1000,
     },
   });
 }

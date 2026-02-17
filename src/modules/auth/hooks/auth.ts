@@ -6,6 +6,7 @@ import {
   useAuthControllerGetProfile,
   useAuthControllerLogout,
 } from "@/shared/api/generated/authentication/authentication";
+import { QUERY_CACHE_STRATEGIES } from "@/shared/constants/query-config";
 
 import { useAuthContext } from "./use-auth-context";
 
@@ -37,9 +38,9 @@ export function useLogout() {
 export function useProfile() {
   return useAuthControllerGetProfile({
     query: {
+      ...QUERY_CACHE_STRATEGIES.NORMAL,
       enabled: !!tokenStorage.getAccessToken(),
       retry: 1,
-      staleTime: 5 * 60 * 1000,
       refetchOnWindowFocus: false,
     },
   });

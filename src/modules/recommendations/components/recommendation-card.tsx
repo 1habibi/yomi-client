@@ -10,7 +10,7 @@ interface RecommendationCardProps {
   item: RecommendationItem;
 }
 
-export const RecommendationCard: React.FC<RecommendationCardProps> = ({
+export const RecommendationCard = React.memo<RecommendationCardProps>(({
   item,
 }) => {
   const { anime } = item;
@@ -86,4 +86,4 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
       </Card>
     </Link>
   );
-};
+});

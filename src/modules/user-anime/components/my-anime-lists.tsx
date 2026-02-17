@@ -2,6 +2,12 @@ import { useState } from "react";
 
 import { Skeleton } from "@/common/components/ui/skeleton";
 import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/common/components/ui/tabs";
+import {
   AddToListDtoListType,
   type UserAnimeResponseDto,
 } from "@/shared/api/generated/model";
@@ -12,12 +18,6 @@ import { LIST_NAMES } from "../utils/list-validation";
 import { AnimeListCard } from "./anime-list-card";
 import { SortableAnimeList } from "./sortable-anime-list";
 
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/common/components/ui/tabs";
 
 export function MyAnimeLists() {
   const [activeTab, setActiveTab] = useState<string>(
