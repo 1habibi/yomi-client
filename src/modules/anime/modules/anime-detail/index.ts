@@ -4,3 +4,4 @@ export { AnimePlayer } from "./components/anime-player";
 export { AnimeDescription } from "./components/anime-description";
 export { AnimeScreenshots } from "./components/anime-screenshots";
 export { AnimeStaff } from "./components/anime-staff";
+export { PlayerCharacterSearchModal } from "./components/player-character-search-modal";

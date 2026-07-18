@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from "./pages/__root"
 import { Route as DiscoveryRouteImport } from "./pages/discovery"
+import { Route as CharacterSearchRouteImport } from "./pages/character-search"
 import { Route as AnimeRouteRouteImport } from "./pages/anime/route"
 import { Route as AuthenticatedRouteRouteImport } from "./pages/_authenticated/route"
 import { Route as IndexRouteImport } from "./pages/index"
@@ -30,6 +31,11 @@ import { Route as AuthenticatedAdminReviewsModerationRouteImport } from "./pages
 const DiscoveryRoute = DiscoveryRouteImport.update({
   id: "/discovery",
   path: "/discovery",
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CharacterSearchRoute = CharacterSearchRouteImport.update({
+  id: "/character-search",
+  path: "/character-search",
   getParentRoute: () => rootRouteImport,
 } as any)
 const AnimeRouteRoute = AnimeRouteRouteImport.update({
@@ -118,6 +124,7 @@ const AuthenticatedAdminReviewsModerationRoute =
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute
   "/anime": typeof AnimeRouteRouteWithChildren
+  "/character-search": typeof CharacterSearchRoute
   "/discovery": typeof DiscoveryRoute
   "/activity": typeof AuthenticatedActivityRoute
   "/profile": typeof AuthenticatedProfileRoute
@@ -135,6 +142,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute
+  "/character-search": typeof CharacterSearchRoute
   "/discovery": typeof DiscoveryRoute
   "/activity": typeof AuthenticatedActivityRoute
   "/profile": typeof AuthenticatedProfileRoute
@@ -155,6 +163,7 @@ export interface FileRoutesById {
   "/": typeof IndexRoute
   "/_authenticated": typeof AuthenticatedRouteRouteWithChildren
   "/anime": typeof AnimeRouteRouteWithChildren
+  "/character-search": typeof CharacterSearchRoute
   "/discovery": typeof DiscoveryRoute
   "/_authenticated/activity": typeof AuthenticatedActivityRoute
   "/_authenticated/profile": typeof AuthenticatedProfileRoute
@@ -175,6 +184,7 @@ export interface FileRouteTypes {
   fullPaths:
     | "/"
     | "/anime"
+    | "/character-search"
     | "/discovery"
     | "/activity"
     | "/profile"
@@ -192,6 +202,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | "/"
+    | "/character-search"
     | "/discovery"
     | "/activity"
     | "/profile"
@@ -211,6 +222,7 @@ export interface FileRouteTypes {
     | "/"
     | "/_authenticated"
     | "/anime"
+    | "/character-search"
     | "/discovery"
     | "/_authenticated/activity"
     | "/_authenticated/profile"
@@ -231,6 +243,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AnimeRouteRoute: typeof AnimeRouteRouteWithChildren
+  CharacterSearchRoute: typeof CharacterSearchRoute
   DiscoveryRoute: typeof DiscoveryRoute
   AuthEmailConfirmationRoute: typeof AuthEmailConfirmationRoute
   AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
@@ -247,6 +260,13 @@ declare module "@tanstack/react-router" {
       path: "/discovery"
       fullPath: "/discovery"
       preLoaderRoute: typeof DiscoveryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    "/character-search": {
+      id: "/character-search"
+      path: "/character-search"
+      fullPath: "/character-search"
+      preLoaderRoute: typeof CharacterSearchRouteImport
       parentRoute: typeof rootRouteImport
     }
     "/anime": {
@@ -402,6 +422,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AnimeRouteRoute: AnimeRouteRouteWithChildren,
+  CharacterSearchRoute: CharacterSearchRoute,
   DiscoveryRoute: DiscoveryRoute,
   AuthEmailConfirmationRoute: AuthEmailConfirmationRoute,
   AuthForgotPasswordRoute: AuthForgotPasswordRoute,

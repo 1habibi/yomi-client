@@ -98,13 +98,6 @@ function PrivacySettingsPage() {
           </div>
 
           <div className="border-t pt-4">
-            <p className="text-muted-foreground text-sm">
-              Дополнительные настройки приватности (видимость активности,
-              сообщения, онлайн-статус) будут доступны после обновления бекенда.
-            </p>
-          </div>
-
-          <div className="border-t pt-4">
             <Button onClick={handleSave} disabled={isPending}>
               {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Сохранить изменения
